@@ -48,18 +48,16 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
+        }
 
+        public String getTag() {
+            return toString();
         }
     }
 
     private static final String TAG = "SetupActivity";
     private static final int BOARDS_LOADER_ID = 1;
     private static final int LISTS_LOADER_ID = 2;
-
-    private static final String BOARDS_TAG = "boards";
-    private static final String TO_DO_TAG = "todo";
-    private static final String DOING_TAG = "doing";
-    private static final String DONE_TAG = "done";
 
     private static final String STATE_BOARD_ID = "boardId";
     private static final String STATE_TO_DO_ID = "toDoId";
@@ -83,7 +81,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, BoardPickerFragment.newInstance(), BOARDS_TAG)
+                    .add(R.id.container, BoardPickerFragment.newInstance(), Step.BOARD.getTag())
                     .commit();
         } else {
             mBoardId = savedInstanceState.getString(STATE_BOARD_ID);
@@ -114,7 +112,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             updateCurrentStep(Step.TO_DO);
             LogUtils.i(TAG, "User picked board " + board);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, ToDoListPickerFragment.newInstance(), TO_DO_TAG)
+                    .replace(R.id.container, ToDoListPickerFragment.newInstance(), Step.TO_DO.getTag())
                     .addToBackStack(null)
                     .commit();
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
@@ -132,7 +130,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             updateCurrentStep(Step.DOING);
             LogUtils.i(TAG, "User picked to-do list " + list);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, DoingListPickerFragment.newInstance(), DOING_TAG)
+                    .replace(R.id.container, DoingListPickerFragment.newInstance(), Step.DOING.getTag())
                     .addToBackStack(null)
                     .commit();
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
@@ -150,7 +148,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             updateCurrentStep(Step.DONE);
             LogUtils.i(TAG, "User picked doing list " + list);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, DoneListPickerFragment.newInstance(), DONE_TAG)
+                    .replace(R.id.container, DoneListPickerFragment.newInstance(), Step.DONE.getTag())
                     .addToBackStack(null)
                     .commit();
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
@@ -174,23 +172,23 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     }
 
     private BoardPickerFragment getBoardsFragment() {
-        return (BoardPickerFragment) findFragment(BOARDS_TAG);
+        return (BoardPickerFragment) findFragment(Step.BOARD);
     }
 
     private ToDoListPickerFragment getToDoFragment() {
-        return (ToDoListPickerFragment) findFragment(TO_DO_TAG);
+        return (ToDoListPickerFragment) findFragment(Step.TO_DO);
     }
 
     private DoingListPickerFragment getDoingFragment() {
-        return (DoingListPickerFragment) findFragment(DOING_TAG);
+        return (DoingListPickerFragment) findFragment(Step.DOING);
     }
 
     private DoneListPickerFragment getDoneFragment() {
-        return (DoneListPickerFragment) findFragment(DONE_TAG);
+        return (DoneListPickerFragment) findFragment(Step.DONE);
     }
 
-    private BasePickerFragment<?> findFragment(String tag) {
-        Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
+    private BasePickerFragment<?> findFragment(Step step) {
+        Fragment f = getSupportFragmentManager().findFragmentByTag(step.getTag());
         BasePickerFragment<?> result = null;
 
         if (f != null) {
