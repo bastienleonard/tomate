@@ -44,23 +44,23 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
             goNext();
         }
 
-        mLastTick = System.currentTimeMillis();
+        mLastTick = System.nanoTime();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mHandler.removeCallbacksAndMessages(null);
-        long currentTick = System.currentTimeMillis();
-        mRemaining -= (System.currentTimeMillis() - mLastTick);
+        long currentTick = System.nanoTime();
+        mRemaining -= (System.nanoTime() - mLastTick);
         mLastTick = currentTick;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        long currentTick = System.currentTimeMillis();
-        mRemaining -= (System.currentTimeMillis() - mLastTick);
+        long currentTick = System.nanoTime();
+        mRemaining -= (System.nanoTime() - mLastTick);
         mLastTick = currentTick;
         outState.putLong(STATE_REMAINING, mRemaining);
     }
