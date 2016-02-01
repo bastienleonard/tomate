@@ -15,14 +15,13 @@ import com.bastienleonard.tomate.trello.loaders.BoardsLoader;
 import com.bastienleonard.tomate.trello.loaders.ListsLoader;
 import com.bastienleonard.tomate.trello.models.Board;
 import com.bastienleonard.tomate.trello.models.TrelloList;
-import com.bastienleonard.tomate.util.LogUtil;
+import com.bastienleonard.tomate.utils.LogUtils;
 
 import java.util.List;
 
 // FIXME: handle back press correctly
 // FIXME: show loading animations
 // FIXME: don't allow selecting the same list in different fragments
-// FIXME: save state for lists  IDs
 public final class SetupActivity extends BaseActivity implements OnItemPickedListener {
     private enum Step implements Parcelable {
         BOARD,
@@ -63,10 +62,16 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     private static final String DONE_TAG = "done";
 
     private static final String STATE_BOARD_ID = "boardId";
+    private static final String STATE_TO_DO_ID = "toDoId";
+    private static final String STATE_DOING_ID = "doingId";
+    private static final String STATE_DONE_ID = "doneId";
     private static final String STATE_STEP = "step";
 
     private Step mCurrentStep = Step.BOARD;
     private String mBoardId;
+    private String mToDoId;
+    private String mDoingId;
+    private String mDoneId;
     private Handler mHandler;
 
     @Override
@@ -82,6 +87,9 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
                     .commit();
         } else {
             mBoardId = savedInstanceState.getString(STATE_BOARD_ID);
+            mToDoId = savedInstanceState.getString(STATE_TO_DO_ID);
+            mDoingId = savedInstanceState.getString(STATE_DOING_ID);
+            mDoneId = savedInstanceState.getString(STATE_DONE_ID);
             mCurrentStep = savedInstanceState.getParcelable(STATE_STEP);
         }
 
@@ -92,6 +100,9 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(STATE_BOARD_ID, mBoardId);
+        outState.putString(STATE_TO_DO_ID, mToDoId);
+        outState.putString(STATE_DOING_ID, mDoingId);
+        outState.putString(STATE_DONE_ID, mDoneId);
         outState.putParcelable(STATE_STEP, mCurrentStep);
     }
 
@@ -101,7 +112,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
         if (Persistence.saveBoardId(this, mBoardId)) {
             updateCurrentStep(Step.TO_DO);
-            LogUtil.i(TAG, "User picked board " + board);
+            LogUtils.i(TAG, "User picked board " + board);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, ToDoListPickerFragment.newInstance(), TO_DO_TAG)
                     .addToBackStack(null)
@@ -109,15 +120,17 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
         } else {
             // FIXME: handle error
-            LogUtil.e(TAG, "Failed to save board ID for " + board);
+            LogUtils.e(TAG, "Failed to save board ID for " + board);
         }
     }
 
     @Override
     public void onTodoListPicked(TrelloList list) {
-        if (Persistence.saveToDoListId(this, list.getId())) {
+        mToDoId = list.getId();
+
+        if (Persistence.saveToDoListId(this, mToDoId)) {
             updateCurrentStep(Step.DOING);
-            LogUtil.i(TAG, "User picked to-do list " + list);
+            LogUtils.i(TAG, "User picked to-do list " + list);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, DoingListPickerFragment.newInstance(), DOING_TAG)
                     .addToBackStack(null)
@@ -125,15 +138,17 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
         } else {
             // FIXME: handle error
-            LogUtil.e(TAG, "Failed to save todo list ID for " + list);
+            LogUtils.e(TAG, "Failed to save todo list ID for " + list);
         }
     }
 
     @Override
     public void onDoingListPicked(TrelloList list) {
-        if (Persistence.saveDoingListId(this, list.getId())) {
+        mDoingId = list.getId();
+
+        if (Persistence.saveDoingListId(this, mDoingId)) {
             updateCurrentStep(Step.DONE);
-            LogUtil.i(TAG, "User picked doing list " + list);
+            LogUtils.i(TAG, "User picked doing list " + list);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, DoneListPickerFragment.newInstance(), DONE_TAG)
                     .addToBackStack(null)
@@ -142,17 +157,19 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
         } else {
             // FIXME: handle error
-            LogUtil.e(TAG, "Failed to save doing list ID for " + list);
+            LogUtils.e(TAG, "Failed to save doing list ID for " + list);
         }
     }
 
     @Override
     public void onDoneListPicked(TrelloList list) {
-        if (Persistence.saveDoneListId(this, list.getId())) {
-            LogUtil.i(TAG, "User picked done list " + list);
+        mDoneId = list.getId();
+
+        if (Persistence.saveDoneListId(this, mDoneId)) {
+            LogUtils.i(TAG, "User picked done list " + list);
         } else {
             // FIXME: handle error
-            LogUtil.e(TAG, "Failed to save done list ID for " + list);
+            LogUtils.e(TAG, "Failed to save done list ID for " + list);
         }
     }
 
@@ -184,7 +201,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     }
 
     private void updateCurrentStep(Step newStep) {
-        LogUtil.i(TAG, mCurrentStep + " -> " + newStep);
+        LogUtils.i(TAG, mCurrentStep + " -> " + newStep);
         mCurrentStep = newStep;
     }
 

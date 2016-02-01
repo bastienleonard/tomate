@@ -2,8 +2,8 @@ package com.bastienleonard.tomate.trello.parsers;
 
 import android.support.annotation.Nullable;
 
-import com.bastienleonard.tomate.util.LogUtil;
-import com.bastienleonard.tomate.util.StreamUtil;
+import com.bastienleonard.tomate.utils.LogUtils;
+import com.bastienleonard.tomate.utils.StreamUtils;
 
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -24,10 +24,10 @@ public abstract class JsonParser<T, U> implements Parser<T> {
 
         try {
             // TODO: make this type-safe
-            U root = (U) new JSONTokener(StreamUtil.inputStreamToString(inputStream)).nextValue();
+            U root = (U) new JSONTokener(StreamUtils.inputStreamToString(inputStream)).nextValue();
             parsed = parseJson(root);
         } catch (IOException|JSONException|ParseException e) {
-            LogUtil.e(TAG, e);
+            LogUtils.e(TAG, e);
         }
 
         return parsed;

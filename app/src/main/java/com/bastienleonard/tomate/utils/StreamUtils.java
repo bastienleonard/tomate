@@ -1,14 +1,14 @@
-package com.bastienleonard.tomate.util;
+package com.bastienleonard.tomate.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 
-public final class StreamUtil {
+public final class StreamUtils {
     private static final String TAG = "StreamUtil";
 
-    private StreamUtil() {
+    private StreamUtils() {
     }
 
     public static String inputStreamToString(InputStream stream)
@@ -39,7 +39,7 @@ public final class StreamUtil {
                 reader.close();
                 stream.close();
             } catch (IOException e) {
-                LogUtil.e(TAG, e);
+                LogUtils.e(TAG, e);
             }
         }
 

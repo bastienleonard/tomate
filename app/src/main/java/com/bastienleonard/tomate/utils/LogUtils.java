@@ -1,12 +1,12 @@
-package com.bastienleonard.tomate.util;
+package com.bastienleonard.tomate.utils;
 
 import android.util.Log;
 
 import com.bastienleonard.tomate.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 
-public final class LogUtil {
-    private LogUtil() {
+public final class LogUtils {
+    private LogUtils() {
     }
 
     public static void e(String tag, Throwable t) {

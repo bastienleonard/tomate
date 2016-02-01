@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.bastienleonard.tomate.trello.TrelloCredentials;
 import com.bastienleonard.tomate.trello.loaders.BoardsLoader;
 import com.bastienleonard.tomate.trello.models.Board;
-import com.bastienleonard.tomate.util.LogUtil;
+import com.bastienleonard.tomate.utils.LogUtils;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
         if (TextUtils.isEmpty(token)) {
             startActivity(new Intent(this, TrelloLoginActivity.class));
         } else {
-            LogUtil.d("DEBUG", "Found persisted token " + token);
+            LogUtils.d(TAG, "Found persisted token " + token);
             getSupportLoaderManager().initLoader(BOARDS_LOADER_ID, null, new LoaderManager.LoaderCallbacks<List<Board>>() {
                 @Override
                 public Loader<List<Board>> onCreateLoader(int id, Bundle args) {
