@@ -173,7 +173,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     }
 
     private BasePickerFragment<?> findFragment(String tag) {
-        Fragment f = getSupportFragmentManager().findFragmentByTag(DONE_TAG);
+        Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
         BasePickerFragment<?> result = null;
 
         if (f != null) {
