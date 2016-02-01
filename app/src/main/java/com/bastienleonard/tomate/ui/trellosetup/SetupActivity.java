@@ -67,6 +67,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
     private Step mCurrentStep = Step.BOARD;
     private String mBoardId;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,8 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             mBoardId = savedInstanceState.getString(STATE_BOARD_ID);
             mCurrentStep = savedInstanceState.getParcelable(STATE_STEP);
         }
+
+        mHandler = new Handler();
     }
 
     @Override
@@ -192,14 +195,18 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         }
 
         @Override
-        public void onLoadFinished(Loader<List<Board>> loader, List<Board> data) {
+        public void onLoadFinished(Loader<List<Board>> loader, final List<Board> data) {
             if (data == null) {
                 // TODO
             } else if (data.size() == 0) {
                 // TODO
             } else {
-                // TODO: do this via a handler
-                getBoardsFragment().display(data);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getBoardsFragment().display(data);
+                    }
+                });
             }
         }
 
@@ -221,7 +228,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             } else if (data.size() == 0) {
                 // TODO
             } else {
-                new Handler().post(new Runnable() {
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         BasePickerFragment<TrelloList> f;
