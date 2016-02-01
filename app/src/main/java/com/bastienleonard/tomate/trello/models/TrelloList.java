@@ -1,6 +1,8 @@
 package com.bastienleonard.tomate.trello.models;
 
-public final class TrelloList {
+import com.bastienleonard.tomate.ui.trellosetup.Displayable;
+
+public final class TrelloList implements Displayable {
     private final String mId;
     private final String mName;
 
@@ -22,6 +24,11 @@ public final class TrelloList {
     }
 
     public String getName() {
+        return mName;
+    }
+
+    @Override
+    public String displayText() {
         return mName;
     }
 }

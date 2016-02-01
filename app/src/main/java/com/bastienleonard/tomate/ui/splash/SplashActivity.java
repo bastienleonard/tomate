@@ -7,8 +7,11 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.bastienleonard.tomate.MainActivity;
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 
 public final class SplashActivity extends AppCompatActivity implements Handler.Callback {
     private static final int WHAT_CONTINUE = 1;
@@ -21,6 +24,7 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.splash_activity);
 
         if (savedInstanceState != null) {
@@ -73,6 +77,7 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
     }
 
     private void goNext() {
-        startActivity(new Intent(this, MainActivity.class));
+        // TODO: only launch SetupActivity when needed
+        startActivity(new Intent(this, SetupActivity.class));
     }
 }

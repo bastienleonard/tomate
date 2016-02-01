@@ -1,6 +1,8 @@
 package com.bastienleonard.tomate.trello.models;
 
-public final class Board {
+import com.bastienleonard.tomate.ui.trellosetup.Displayable;
+
+public final class Board implements Displayable {
     private final String mId;
     private final String mName;
 
@@ -22,6 +24,11 @@ public final class Board {
     }
 
     public String getName() {
+        return mName;
+    }
+
+    @Override
+    public String displayText() {
         return mName;
     }
 }

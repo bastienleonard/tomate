@@ -25,6 +25,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.trellosetup.SetupActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/setup_label" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="46f49cc69ebe5f0bd7fdbd7ea04f4acf5a59ac60" />

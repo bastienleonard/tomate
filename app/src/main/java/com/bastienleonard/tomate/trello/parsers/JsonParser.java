@@ -6,7 +6,6 @@ import com.bastienleonard.tomate.util.LogUtil;
 import com.bastienleonard.tomate.util.StreamUtil;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
@@ -26,7 +25,6 @@ public abstract class JsonParser<T, U> implements Parser<T> {
         try {
             // TODO: make this type-safe
             U root = (U) new JSONTokener(StreamUtil.inputStreamToString(inputStream)).nextValue();
-            android.util.Log.e("DEBUG", "JSON: " + root.toString());
             parsed = parseJson(root);
         } catch (IOException|JSONException|ParseException e) {
             LogUtil.e(TAG, e);

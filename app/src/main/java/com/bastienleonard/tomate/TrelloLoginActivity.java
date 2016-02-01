@@ -34,17 +34,13 @@ public final class TrelloLoginActivity extends AppCompatActivity {
                 .build()
                 .toString();
         webView.loadUrl(url);
-        //"https://trello.com/1/authorize?key=6ea4c21c2d0d193dbfab3c233f4ea1f4&name=Tomate&response_type=token&scope=read%2Cwrite&return_url=https%3A%2F%2Fdevelopers.trello.com&callback_method=fragment&expiration=never"
     }
 
     private final class Client extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            android.util.Log.e("DEBUG", "URL: " + url);
-
             if (url.startsWith("https://developers.trello.com/#token=")) {
                 String token = url.substring(url.indexOf("=") + 1);
-                android.util.Log.e("DEBUG", "Found token " + token);
 
                 if (TrelloCredentials.persistToken(view.getContext(), token)) {
                     TrelloLoginActivity.this.finish();
