@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import com.bastienleonard.tomate.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 class Adapter<T extends Displayable> extends RecyclerView.Adapter<ViewHolder> {
@@ -52,6 +54,12 @@ class Adapter<T extends Displayable> extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public void setItems(List<T> items) {
-        this.mItems = items;
+        mItems = items;
+        Collections.sort(mItems, new Comparator<T>() {
+            @Override
+            public int compare(T a, T b) {
+                return String.CASE_INSENSITIVE_ORDER.compare(a.displayText(), b.displayText());
+            }
+        });
     }
 }
