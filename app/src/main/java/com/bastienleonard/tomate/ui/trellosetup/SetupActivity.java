@@ -17,11 +17,11 @@ import com.bastienleonard.tomate.trello.models.Board;
 import com.bastienleonard.tomate.trello.models.TrelloList;
 import com.bastienleonard.tomate.utils.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // FIXME: handle back press correctly
 // FIXME: show loading animations
-// FIXME: don't allow selecting the same list in different fragments
 public final class SetupActivity extends BaseActivity implements OnItemPickedListener {
     private enum Step implements Parcelable {
         BOARD,
@@ -247,22 +247,39 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
                     @Override
                     public void run() {
                         BasePickerFragment<TrelloList> f;
+                        List<TrelloList> filtered;
 
                         switch (mCurrentStep) {
                             case TO_DO:
                                 f = getToDoFragment();
+                                filtered = data;
                                 break;
                             case DOING:
                                 f = getDoingFragment();
+                                filtered = new ArrayList<>(data.size());
+
+                                for (TrelloList l: data) {
+                                    if (!l.getId().equals(mToDoId)) {
+                                        filtered.add(l);
+                                    }
+                                }
+
                                 break;
                             case DONE:
                                 f = getDoneFragment();
+                                filtered = new ArrayList<>(data.size());
+
+                                for (TrelloList l: data) {
+                                    if (!l.getId().equals(mToDoId) && !l.getId().equals(mDoingId)) {
+                                        filtered.add(l);
+                                    }
+                                }
                                 break;
                             default:
                                 throw new AssertionError();
                         }
 
-                        f.display(data);
+                        f.display(filtered);
                     }
                 });
             }
