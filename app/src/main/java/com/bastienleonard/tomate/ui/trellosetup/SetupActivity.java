@@ -18,7 +18,9 @@ import com.bastienleonard.tomate.trello.models.TrelloList;
 import com.bastienleonard.tomate.utils.LogUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 // FIXME: handle back press correctly
 // FIXME: show loading animations
@@ -187,6 +189,10 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         return (DoneListPickerFragment) findFragment(Step.DONE);
     }
 
+    private BasePickerFragment<TrelloList> getListFragment(Step step) {
+        return (BasePickerFragment<TrelloList>) findFragment(step);
+    }
+
     private BasePickerFragment<?> findFragment(Step step) {
         Fragment f = getSupportFragmentManager().findFragmentByTag(step.getTag());
         BasePickerFragment<?> result = null;
@@ -248,35 +254,30 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
                     public void run() {
                         BasePickerFragment<TrelloList> f;
                         List<TrelloList> filtered;
+                        Set<String> filteredIds = new HashSet<>();
 
                         switch (mCurrentStep) {
-                            case TO_DO:
-                                f = getToDoFragment();
-                                filtered = data;
-                                break;
                             case DOING:
-                                f = getDoingFragment();
-                                filtered = new ArrayList<>(data.size());
-
-                                for (TrelloList l: data) {
-                                    if (!l.getId().equals(mToDoId)) {
-                                        filtered.add(l);
-                                    }
-                                }
-
+                                filteredIds.add(mToDoId);
                                 break;
                             case DONE:
-                                f = getDoneFragment();
-                                filtered = new ArrayList<>(data.size());
-
-                                for (TrelloList l: data) {
-                                    if (!l.getId().equals(mToDoId) && !l.getId().equals(mDoingId)) {
-                                        filtered.add(l);
-                                    }
-                                }
+                                filteredIds.add(mToDoId);
+                                filteredIds.add(mDoingId);
                                 break;
-                            default:
-                                throw new AssertionError();
+                        }
+
+                        f = getListFragment(mCurrentStep);
+
+                        if (filteredIds.size() == 0) {
+                            filtered = data;
+                        } else {
+                            filtered = new ArrayList<>(data.size() - filteredIds.size());
+
+                            for (TrelloList l: data) {
+                                if (!filteredIds.contains(l.getId())) {
+                                    filtered.add(l);
+                                }
+                            }
                         }
 
                         f.display(filtered);
