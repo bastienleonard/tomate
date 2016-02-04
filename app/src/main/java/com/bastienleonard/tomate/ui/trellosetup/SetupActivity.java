@@ -57,6 +57,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
         @Override
         public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeInt(ordinal());
         }
 
         public String getTag() {
