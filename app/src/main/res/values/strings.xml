@@ -4,9 +4,16 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="setup_label">Trello setup</string>
+    <string name="tasks_label">Tasks</string>
 
     <string name="title_board">Pick a board</string>
     <string name="title_to_do">Pick a to-do list</string>
     <string name="title_doing">Pick a doing list</string>
     <string name="title_done">Pick a done list</string>
+
+    <string-array name="tasks_tabs_titles">
+        <item>To do</item>
+        <item>Doing</item>
+        <item>Done</item>
+    </string-array>
 </resources>

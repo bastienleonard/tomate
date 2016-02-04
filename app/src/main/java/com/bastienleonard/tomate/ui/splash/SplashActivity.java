@@ -1,13 +1,17 @@
 package com.bastienleonard.tomate.ui.splash;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
+import com.bastienleonard.tomate.Persistence;
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 import com.crashlytics.android.Crashlytics;
 
@@ -41,7 +45,7 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
         if (mRemaining > 0L) {
             mHandler.sendEmptyMessageDelayed(WHAT_CONTINUE, mRemaining);
         } else {
-            goNext();
+            goNext(this);
         }
 
         mLastTick = System.nanoTime();
@@ -69,15 +73,25 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
     public boolean handleMessage(Message message) {
         switch (message.what) {
             case WHAT_CONTINUE:
-                goNext();
+                goNext(this);
                 return true;
             default:
                 return false;
         }
     }
 
-    private void goNext() {
-        // TODO: only launch SetupActivity when needed
-        startActivity(new Intent(this, SetupActivity.class));
+    private static void goNext(Context context) {
+        if (trelloFullySetup(context)) {
+            context.startActivity(new Intent(context, TasksActivity.class));
+        } else {
+            context.startActivity(new Intent(context, SetupActivity.class));
+        }
+    }
+
+    private static boolean trelloFullySetup(Context context) {
+        return !TextUtils.isEmpty(Persistence.getBoardId(context)) &&
+                !TextUtils.isEmpty(Persistence.getToDoListId(context)) &&
+                !TextUtils.isEmpty(Persistence.getDoingListId(context)) &&
+                !TextUtils.isEmpty(Persistence.getDoneListId(context));
     }
 }
