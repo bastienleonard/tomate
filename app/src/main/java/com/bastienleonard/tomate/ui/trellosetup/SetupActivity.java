@@ -1,5 +1,6 @@
 package com.bastienleonard.tomate.ui.trellosetup;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -26,10 +27,10 @@ import java.util.Set;
 // FIXME: show loading animations
 public final class SetupActivity extends BaseActivity implements OnItemPickedListener {
     private enum Step implements Parcelable {
-        BOARD,
-        TO_DO,
-        DOING,
-        DONE;
+        BOARD(R.string.title_board),
+        TO_DO(R.string.title_to_do),
+        DOING(R.string.title_doing),
+        DONE(R.string.title_done);
 
         public static final Creator<Step> CREATOR = new Creator<Step>() {
             @Override
@@ -43,6 +44,12 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             }
         };
 
+        private final int mTitle;
+
+        private Step(int title) {
+            mTitle = title;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -54,6 +61,10 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
         public String getTag() {
             return toString();
+        }
+
+        public String getTitle(Context context) {
+            return context.getString(mTitle);
         }
     }
 
@@ -207,6 +218,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     private void updateCurrentStep(Step newStep) {
         LogUtils.i(TAG, mCurrentStep + " -> " + newStep);
         mCurrentStep = newStep;
+        getSupportActionBar().setTitle(mCurrentStep.getTitle(this));
     }
 
     private final class BoardsLoaderCallbacks implements LoaderManager.LoaderCallbacks<List<Board>> {
