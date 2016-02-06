@@ -37,8 +37,13 @@ public final class TasksFragment extends Fragment implements LoaderManager.Loade
         mAdapter = new TasksRecyclerViewAdapter();
         list.setAdapter(mAdapter);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
-        getLoaderManager().initLoader(CARDS_LOADER_ID, null, this);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(CARDS_LOADER_ID, null, this);
     }
 
     @Override
