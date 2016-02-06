@@ -17,7 +17,7 @@ public abstract class BasePickerFragment<T extends Displayable> extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list, container, false);
+        View view = inflater.inflate(R.layout.base_picker_fragment, container, false);
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter<T>(this);
