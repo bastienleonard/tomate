@@ -10,17 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bastienleonard.tomate.BaseAdapter;
 import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.trello.loaders.CardsLoader;
 import com.bastienleonard.tomate.trello.models.Card;
 
 import java.util.List;
 
-public final class TasksFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Card>> {
-    private static final String ARG_LIST_ID = "listId";
+public class TasksFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Card>> {
+    protected static final String ARG_LIST_ID = "listId";
     private static final int CARDS_LOADER_ID = 1;
 
-    private TasksRecyclerViewAdapter mAdapter;
+    private BaseAdapter<Card, ? extends RecyclerView.ViewHolder> mAdapter;
 
     public static TasksFragment newInstance(String listId) {
         TasksFragment f = new TasksFragment();
@@ -30,11 +31,15 @@ public final class TasksFragment extends Fragment implements LoaderManager.Loade
         return f;
     }
 
+    protected BaseAdapter<Card, ? extends RecyclerView.ViewHolder> createAdapter() {
+        return new TasksRecyclerViewAdapter();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks_fragment, container, false);
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
-        mAdapter = new TasksRecyclerViewAdapter();
+        mAdapter = createAdapter();
         list.setAdapter(mAdapter);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
@@ -58,7 +63,7 @@ public final class TasksFragment extends Fragment implements LoaderManager.Loade
         } else if (cards.size() == 0) {
             // TODO
         } else {
-            mAdapter.setCard(cards);
+            mAdapter.setItems(cards);
             mAdapter.notifyDataSetChanged();
         }
     }

@@ -5,15 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bastienleonard.tomate.BaseAdapter;
 import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.trello.models.Card;
 
-import java.util.ArrayList;
-import java.util.List;
-
-final class TasksRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
-    private List<Card> mCards = new ArrayList<>();
-
+final class TasksRecyclerViewAdapter extends BaseAdapter<Card, ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -22,17 +18,7 @@ final class TasksRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Card card = mCards.get(position);
+    protected void onBindItem(ViewHolder holder, Card card, int position) {
         holder.text.setText(card.getName());
-    }
-
-    @Override
-    public int getItemCount() {
-        return mCards.size();
-    }
-
-    public void setCard(List<Card> cards) {
-        mCards = cards;
     }
 }

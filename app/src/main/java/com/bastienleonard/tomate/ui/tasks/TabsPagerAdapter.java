@@ -20,7 +20,7 @@ final class TabsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TasksFragment.newInstance(Persistence.getToDoListId(mContext));
+                return TodoTasksFragment.newInstance(Persistence.getToDoListId(mContext));
             case 1:
                 return TasksFragment.newInstance(Persistence.getDoingListId(mContext));
             case 2:
