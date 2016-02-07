@@ -12,6 +12,8 @@ import android.text.TextUtils;
 
 import com.bastienleonard.tomate.Persistence;
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.TrelloLoginActivity;
+import com.bastienleonard.tomate.trello.TrelloCredentials;
 import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 import com.crashlytics.android.Crashlytics;
@@ -82,7 +84,9 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
     }
 
     private static void goNext(Context context) {
-        if (trelloFullySetup(context)) {
+        if (TextUtils.isEmpty(TrelloCredentials.getPersistedToken(context))) {
+            context.startActivity(new Intent(context, TrelloLoginActivity.class));
+        } else if (trelloFullySetup(context)) {
             context.startActivity(new Intent(context, TasksActivity.class));
         } else {
             context.startActivity(new Intent(context, SetupActivity.class));
