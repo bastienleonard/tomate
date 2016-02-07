@@ -16,7 +16,7 @@ import java.util.Locale;
 public final class TimerActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
     private static final String TAG = "TimerActivity";
     private static final int WHAT_UPDATE_TIMER = 1;
-    private static final long REFRESH_DELAY = 500;
+    private static final long REFRESH_DELAY = 500L;
 
     private static final String STATE_RUNNING = "running";
     private static final String STATE_REMAINING_TIME = "remainingTime";
