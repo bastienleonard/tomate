@@ -5,6 +5,7 @@
 
     <string name="setup_label">Trello setup</string>
     <string name="tasks_label">Tasks</string>
+    <string name="timer_label">Timer</string>
 
     <string name="title_board">Pick a board</string>
     <string name="title_to_do">Pick a to-do list</string>
@@ -16,4 +17,8 @@
         <item>Doing</item>
         <item>Done</item>
     </string-array>
+
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="stop">Stop</string>
 </resources>
