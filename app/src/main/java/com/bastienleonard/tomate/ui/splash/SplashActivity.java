@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -48,23 +49,23 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
             goNext(this);
         }
 
-        mLastTick = System.nanoTime();
+        mLastTick = SystemClock.elapsedRealtime();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mHandler.removeCallbacksAndMessages(null);
-        long currentTick = System.nanoTime();
-        mRemaining -= (System.nanoTime() - mLastTick);
+        long currentTick = SystemClock.elapsedRealtime();
+        mRemaining -= (SystemClock.elapsedRealtime() - mLastTick);
         mLastTick = currentTick;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        long currentTick = System.nanoTime();
-        mRemaining -= (System.nanoTime() - mLastTick);
+        long currentTick = SystemClock.elapsedRealtime();
+        mRemaining -= (SystemClock.elapsedRealtime() - mLastTick);
         mLastTick = currentTick;
         outState.putLong(STATE_REMAINING, mRemaining);
     }
