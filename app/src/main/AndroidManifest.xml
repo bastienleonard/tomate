@@ -23,8 +23,6 @@
         </activity>
         <activity android:name=".TrelloLoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.trellosetup.SetupActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/setup_label" />
