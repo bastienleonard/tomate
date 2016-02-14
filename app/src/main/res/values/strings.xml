@@ -21,4 +21,5 @@
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
     <string name="stop">Stop</string>
+    <string name="error_task_sync">An error occurred while updating the task</string>
 </resources>

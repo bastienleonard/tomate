@@ -1,5 +1,6 @@
-package com.bastienleonard.tomate.ui.tasks;
+package com.bastienleonard.tomate.ui.tasks.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -12,27 +13,23 @@ import android.view.ViewGroup;
 
 import com.bastienleonard.tomate.BaseAdapter;
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.TomateApp;
+import com.bastienleonard.tomate.models.Task;
 import com.bastienleonard.tomate.trello.loaders.CardsLoader;
 import com.bastienleonard.tomate.trello.models.Card;
+import com.bastienleonard.tomate.ui.tasks.TasksRecyclerViewAdapter;
+import com.bastienleonard.tomate.ui.timer.TimerActivity;
 
 import java.util.List;
 
-public class TasksFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Card>> {
+public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.OnTimerClickedListener, LoaderManager.LoaderCallbacks<List<Card>> {
     protected static final String ARG_LIST_ID = "listId";
     private static final int CARDS_LOADER_ID = 1;
 
     private BaseAdapter<Card, ? extends RecyclerView.ViewHolder> mAdapter;
 
-    public static TasksFragment newInstance(String listId) {
-        TasksFragment f = new TasksFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_LIST_ID, listId);
-        f.setArguments(args);
-        return f;
-    }
-
     protected BaseAdapter<Card, ? extends RecyclerView.ViewHolder> createAdapter() {
-        return new TasksRecyclerViewAdapter();
+        return new TasksRecyclerViewAdapter(this);
     }
 
     @Override
@@ -49,6 +46,13 @@ public class TasksFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(CARDS_LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onTimerClicked(Card card){
+        Intent intent = new Intent(getContext(), TimerActivity.class);
+        TimerActivity.fillIntent(intent, card.getId(), TomateApp.get().getTaskCache().get(card.getId()));
+        startActivity(intent);
     }
 
     @Override
@@ -70,6 +74,5 @@ public class TasksFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoaderReset(Loader<List<Card>> loader) {
-
     }
 }

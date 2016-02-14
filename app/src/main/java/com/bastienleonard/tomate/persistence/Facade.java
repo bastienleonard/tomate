@@ -1,16 +1,29 @@
-package com.bastienleonard.tomate;
+package com.bastienleonard.tomate.persistence;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
+import android.text.TextUtils;
 
-public final class Persistence {
+import com.bastienleonard.tomate.models.Task;
+import com.bastienleonard.tomate.utils.LogUtils;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class Facade {
+    private static final String TAG = "Persistence";
     private static final String PREF_NAME = "persistence";
     private static final String KEY_BOARD_ID = "boardId";
     private static final String KEY_TODO_LIST_ID = "todoListId";
     private static final String KEY_DOING_LIST_ID = "doingListId";
     private static final String KEY_DONE_LIST_ID = "doneListId";
+    private static final String KEY_TASKS = "tasks";
 
-    private Persistence() {
+    private Facade() {
     }
 
     @CheckResult
@@ -50,7 +63,40 @@ public final class Persistence {
     }
 
     @CheckResult
+    public static boolean saveTasks(Context context, List<Task> tasks) {
+        try {
+            return saveString(context, KEY_TASKS, TasksPersistence.toJson(tasks));
+        } catch (JSONException e) {
+            LogUtils.e(TAG, e);
+            return false;
+        }
+    }
+
+    @Nullable
+    @WorkerThread
+    public static List<Task> getTasks(Context context) {
+        LogUtils.d(TAG, "Loading tasks");
+
+        try {
+            String json = getString(context, KEY_TASKS);
+
+            if (TextUtils.isEmpty(json)) {
+                return new ArrayList<>();
+            }
+
+            List<Task> tasks = TasksPersistence.fromJson(json);
+            LogUtils.d(TAG, "Loaded tasks");
+            return tasks;
+        } catch (JSONException e) {
+            LogUtils.e(TAG, e);
+            return null;
+        }
+    }
+
+    @CheckResult
+    @WorkerThread
     private static boolean saveString(Context context, String key, String value) {
+        LogUtils.d(TAG, "Saved string " + value + " for key " + key);
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
                 .edit()
                 .putString(key, value)

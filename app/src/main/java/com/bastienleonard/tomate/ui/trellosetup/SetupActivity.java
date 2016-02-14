@@ -10,7 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
 import com.bastienleonard.tomate.BaseActivity;
-import com.bastienleonard.tomate.Persistence;
+import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.trello.loaders.BoardsLoader;
 import com.bastienleonard.tomate.trello.loaders.ListsLoader;
@@ -122,7 +122,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     public void onBoardPicked(Board board) {
         mBoardId = board.getId();
 
-        if (Persistence.saveBoardId(this, mBoardId)) {
+        if (Facade.saveBoardId(this, mBoardId)) {
             updateCurrentStep(Step.TO_DO);
             LogUtils.i(TAG, "User picked board " + board);
             getSupportFragmentManager().beginTransaction()
@@ -140,7 +140,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     public void onTodoListPicked(TrelloList list) {
         mToDoId = list.getId();
 
-        if (Persistence.saveToDoListId(this, mToDoId)) {
+        if (Facade.saveToDoListId(this, mToDoId)) {
             updateCurrentStep(Step.DOING);
             LogUtils.i(TAG, "User picked to-do list " + list);
             getSupportFragmentManager().beginTransaction()
@@ -158,7 +158,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     public void onDoingListPicked(TrelloList list) {
         mDoingId = list.getId();
 
-        if (Persistence.saveDoingListId(this, mDoingId)) {
+        if (Facade.saveDoingListId(this, mDoingId)) {
             updateCurrentStep(Step.DONE);
             LogUtils.i(TAG, "User picked doing list " + list);
             getSupportFragmentManager().beginTransaction()
@@ -177,7 +177,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     public void onDoneListPicked(TrelloList list) {
         mDoneId = list.getId();
 
-        if (Persistence.saveDoneListId(this, mDoneId)) {
+        if (Facade.saveDoneListId(this, mDoneId)) {
             LogUtils.i(TAG, "User picked done list " + list);
         } else {
             // FIXME: handle error

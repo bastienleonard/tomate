@@ -7,26 +7,36 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
-import com.bastienleonard.tomate.Persistence;
+import com.bastienleonard.tomate.TomateApp;
+import com.bastienleonard.tomate.models.Task;
+import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.TrelloLoginActivity;
+import com.bastienleonard.tomate.persistence.TasksLoader;
 import com.bastienleonard.tomate.trello.TrelloCredentials;
 import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 import com.crashlytics.android.Crashlytics;
 
+import java.util.List;
+
 import io.fabric.sdk.android.Fabric;
 
-public final class SplashActivity extends AppCompatActivity implements Handler.Callback {
+public final class SplashActivity extends AppCompatActivity implements Handler.Callback, LoaderManager.LoaderCallbacks<List<Task>> {
     private static final int WHAT_CONTINUE = 1;
     private static final String STATE_REMAINING = "remaining";
+    private static final String STATE_TASKS_LOADED = "tasksLoaded";
+    private static final int TASKS_LOADER_ID = 1;
 
     private Handler mHandler;
-    private long mRemaining = 2000L;
+    private long mRemaining = 2 * 1000L; // Minimum duration during which the splash should be shown
     private long mLastTick;
+    private boolean mTasksLoaded = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,9 +46,11 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
 
         if (savedInstanceState != null) {
             mRemaining = savedInstanceState.getLong(STATE_REMAINING);
+            mTasksLoaded = savedInstanceState.getBoolean(STATE_TASKS_LOADED);
         }
 
         mHandler = new Handler(this);
+        getSupportLoaderManager().initLoader(TASKS_LOADER_ID, null, this);
     }
 
     @Override
@@ -70,17 +82,46 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
         mRemaining -= (SystemClock.elapsedRealtime() - mLastTick);
         mLastTick = currentTick;
         outState.putLong(STATE_REMAINING, mRemaining);
+        outState.putBoolean(STATE_TASKS_LOADED, mTasksLoaded);
     }
 
     @Override
     public boolean handleMessage(Message message) {
         switch (message.what) {
             case WHAT_CONTINUE:
-                goNext(this);
+                if (mTasksLoaded) {
+                    goNext(this);
+                }
+
                 return true;
             default:
                 return false;
         }
+    }
+
+    @Override
+    public Loader<List<Task>> onCreateLoader(int id, Bundle args) {
+        return new TasksLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Task>> loader, List<Task> tasks) {
+        if (tasks == null) {
+            // TODO
+        } else if (tasks.size() == 0) {
+            // TODO
+        } else {
+            TomateApp.get().getTaskCache().setTasks(tasks);
+            mTasksLoaded = true;
+
+            if (mRemaining < 0L) {
+                goNext(this);
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Task>> loader) {
     }
 
     private static void goNext(Context context) {
@@ -94,9 +135,9 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
     }
 
     private static boolean trelloFullySetup(Context context) {
-        return !TextUtils.isEmpty(Persistence.getBoardId(context)) &&
-                !TextUtils.isEmpty(Persistence.getToDoListId(context)) &&
-                !TextUtils.isEmpty(Persistence.getDoingListId(context)) &&
-                !TextUtils.isEmpty(Persistence.getDoneListId(context));
+        return !TextUtils.isEmpty(Facade.getBoardId(context)) &&
+                !TextUtils.isEmpty(Facade.getToDoListId(context)) &&
+                !TextUtils.isEmpty(Facade.getDoingListId(context)) &&
+                !TextUtils.isEmpty(Facade.getDoneListId(context));
     }
 }
