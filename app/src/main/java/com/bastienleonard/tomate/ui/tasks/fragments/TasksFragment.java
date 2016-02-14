@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bastienleonard.tomate.BaseAdapter;
+import com.bastienleonard.tomate.ExclusiveLayout;
 import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
@@ -27,6 +28,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     private static final int CARDS_LOADER_ID = 1;
 
     private BaseAdapter<Card, ? extends RecyclerView.ViewHolder> mAdapter;
+    private ExclusiveLayout mExclusiveLayout;
 
     protected BaseAdapter<Card, ? extends RecyclerView.ViewHolder> createAdapter() {
         return new TasksRecyclerViewAdapter(this);
@@ -35,6 +37,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks_fragment, container, false);
+        mExclusiveLayout = (ExclusiveLayout) view.findViewById(R.id.exclusive_layout);
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
         mAdapter = createAdapter();
         list.setAdapter(mAdapter);
@@ -67,6 +70,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
         } else if (cards.size() == 0) {
             // TODO
         } else {
+            mExclusiveLayout.showNext();
             mAdapter.setItems(cards);
             mAdapter.notifyDataSetChanged();
         }
