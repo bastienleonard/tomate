@@ -2,6 +2,7 @@ package com.bastienleonard.tomate.persistence;
 
 import android.content.Context;
 
+import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
 import com.bastienleonard.tomate.BasicLoader;
 import com.bastienleonard.tomate.utils.LogUtils;
@@ -50,6 +51,7 @@ public final class UpdateTaskLoader extends BasicLoader<Boolean> {
                 ));
             }
 
+            TomateApp.get().getTaskCache().setTasks(tasks);
             return Facade.saveTasks(getContext(), tasks);
         }
 
