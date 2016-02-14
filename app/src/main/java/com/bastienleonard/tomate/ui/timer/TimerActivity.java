@@ -112,6 +112,12 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
+    public void onBackPressed() {
+        stop();
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.pause_resume:
