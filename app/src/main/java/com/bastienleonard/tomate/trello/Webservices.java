@@ -54,7 +54,7 @@ public final class Webservices {
                 .toString();
         List<Pair<String, String>> args = new ArrayList<>();
         args.add(Pair.create("value", listId));
-        Http.put(url, args);
+        Http.put(url, args).close();
     }
 
     private static Uri.Builder getBaseUrlBuilder(String appKey, String token) {
