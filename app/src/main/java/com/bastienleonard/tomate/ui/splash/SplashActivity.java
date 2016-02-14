@@ -108,8 +108,6 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
     public void onLoadFinished(Loader<List<Task>> loader, List<Task> tasks) {
         if (tasks == null) {
             // TODO
-        } else if (tasks.size() == 0) {
-            // TODO
         } else {
             TomateApp.get().getTaskCache().setTasks(tasks);
             mTasksLoaded = true;
