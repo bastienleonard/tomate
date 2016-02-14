@@ -16,7 +16,9 @@ import com.bastienleonard.tomate.ExclusiveLayout;
 import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
+import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.trello.loaders.CardsLoader;
+import com.bastienleonard.tomate.trello.loaders.MoveCardLoader;
 import com.bastienleonard.tomate.trello.models.Card;
 import com.bastienleonard.tomate.ui.tasks.TasksRecyclerViewAdapter;
 import com.bastienleonard.tomate.ui.timer.TimerActivity;
@@ -26,6 +28,7 @@ import java.util.List;
 public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.OnTimerClickedListener, LoaderManager.LoaderCallbacks<List<Card>> {
     protected static final String ARG_LIST_ID = "listId";
     private static final int CARDS_LOADER_ID = 1;
+    private static final int MOVE_CARD_LOADER_ID = 2;
 
     private BaseAdapter<Card, ? extends RecyclerView.ViewHolder> mAdapter;
     private ExclusiveLayout mExclusiveLayout;
@@ -53,8 +56,14 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
 
     @Override
     public void onTimerClicked(Card card){
+        Task task = TomateApp.get().getTaskCache().get(card.getId());
+
+        if (task == null) {
+            getLoaderManager().initLoader(MOVE_CARD_LOADER_ID, null, new MoveCardLoaderCallbacks(card.getId(), Facade.getDoingListId(getContext())));
+        }
+
         Intent intent = new Intent(getContext(), TimerActivity.class);
-        TimerActivity.fillIntent(intent, card.getId(), TomateApp.get().getTaskCache().get(card.getId()));
+        TimerActivity.fillIntent(intent, card.getId(), task);
         startActivity(intent);
     }
 
@@ -78,5 +87,31 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
 
     @Override
     public void onLoaderReset(Loader<List<Card>> loader) {
+    }
+
+    private final class MoveCardLoaderCallbacks implements LoaderManager.LoaderCallbacks<Boolean> {
+        private final String mCardId;
+        private final String mListId;
+
+        public MoveCardLoaderCallbacks(String cardId, String listId) {
+            this.mCardId = cardId;
+            this.mListId = listId;
+        }
+
+        @Override
+        public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+            return new MoveCardLoader(getContext(), mCardId, mListId);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+            if (!data) {
+                // TODO
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Boolean> loader) {
+        }
     }
 }
