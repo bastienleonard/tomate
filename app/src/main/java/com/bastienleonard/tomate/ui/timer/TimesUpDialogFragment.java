@@ -10,13 +10,18 @@ import android.widget.Button;
 
 import com.bastienleonard.tomate.R;
 
-import java.util.Timer;
-
 public final class TimesUpDialogFragment extends DialogFragment implements View.OnClickListener {
     private static final String TAG = "TimesUpDialogFragment";
 
     public static TimesUpDialogFragment newInstance() {
         return new TimesUpDialogFragment();
+    }
+
+    private boolean mMoveToToDo = true;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -33,6 +38,9 @@ public final class TimesUpDialogFragment extends DialogFragment implements View.
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        if (mMoveToToDo) {
+            moveToToDo();
+        }
 
         super.onDismiss(dialog);
     }
@@ -53,7 +61,12 @@ public final class TimesUpDialogFragment extends DialogFragment implements View.
     }
 
     private void done() {
+        mMoveToToDo = false;
         ((TimerActivity) getActivity()).onTaskMarkedAsDone();
         dismiss();
+    }
+
+    private void moveToToDo() {
+        ((TimerActivity) getActivity()).onMoveToToDo();
     }
 }

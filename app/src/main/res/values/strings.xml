@@ -26,6 +26,7 @@
     <string name="short_break">Short break</string>
     <string name="long_break">Long break</string>
     <string name="task_done_comment">Task finished after %1$d pomodoros, total %2$s</string>
+    <string name="dismiss_note">Dimissing this popup will place this card back in your to-do list</string>
 
     <string name="error_task_sync">An error occurred while updating the task</string>
     <string name="error_card_move">An error occurred while moving the Trello card</string>

@@ -221,6 +221,12 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
         finish();
     }
 
+    public void onMoveToToDo() {
+        getSupportLoaderManager().initLoader(MOVE_CARD_LOADER_ID, null, new MoveCardLoaderCallbacks(mCardId,
+                Facade.getToDoListId(this)));
+        finish();
+    }
+
     private final class TaskUpdateLoaderCallbacks implements LoaderManager.LoaderCallbacks<Boolean> {
         private final String mCardId;
         private final long mTime;
