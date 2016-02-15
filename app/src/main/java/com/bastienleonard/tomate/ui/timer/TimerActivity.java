@@ -1,6 +1,9 @@
 package com.bastienleonard.tomate.ui.timer;
 
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -208,6 +211,9 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void onPomodoroCompleted() {
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        RingtoneManager.getRingtone(getApplicationContext(), uri).play();
+
         mTask = mTask.incPomodoros();
         getSupportLoaderManager().initLoader(TASK_UPDATE_LOADER_ID, null, new TaskUpdateLoaderCallbacks(mCardId, Task.POMODORO_DURATION, true));
         TimesUpDialogFragment.newInstance().show(getSupportFragmentManager(), null);
