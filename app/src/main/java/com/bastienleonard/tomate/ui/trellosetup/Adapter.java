@@ -18,7 +18,6 @@ final class Adapter<T extends Displayable> extends BaseAdapter<T, ViewHolder> {
         void onItemClicked(T item);
     }
 
-    protected List<T> mItems = new ArrayList<>();
     private OnItemClickedListener<T> mListener;
 
     public Adapter(OnItemClickedListener<T> listener) {

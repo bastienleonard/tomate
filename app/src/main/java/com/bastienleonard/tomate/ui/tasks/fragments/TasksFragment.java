@@ -2,6 +2,8 @@ package com.bastienleonard.tomate.ui.tasks.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -32,6 +34,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
 
     private BaseAdapter<Card, ? extends RecyclerView.ViewHolder> mAdapter;
     private ExclusiveLayout mExclusiveLayout;
+    private CoordinatorLayout mCoordinator;
 
     protected BaseAdapter<Card, ? extends RecyclerView.ViewHolder> createAdapter() {
         return new TasksRecyclerViewAdapter(this);
@@ -40,6 +43,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks_fragment, container, false);
+        mCoordinator = (CoordinatorLayout) view.findViewById(R.id.coordinator);
         mExclusiveLayout = (ExclusiveLayout) view.findViewById(R.id.exclusive_layout);
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
         mAdapter = createAdapter();
@@ -71,9 +75,9 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     @Override
     public void onLoadFinished(Loader<List<Card>> loader, List<Card> cards) {
         if (cards == null) {
-            // TODO
+            Snackbar.make(mCoordinator, R.string.error_loading_cards, Snackbar.LENGTH_LONG).show();
         } else if (cards.size() == 0) {
-            // TODO
+            mExclusiveLayout.showNext();
         } else {
             mExclusiveLayout.showNext();
             mAdapter.setItems(cards);
@@ -104,7 +108,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
             getLoaderManager().destroyLoader(MOVE_CARD_LOADER_ID);
 
             if (!data) {
-                // TODO
+                Snackbar.make(mCoordinator, R.string.error_card_move, Snackbar.LENGTH_LONG).show();
             }
         }
 

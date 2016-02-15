@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="login_label">Login to Trello</string>
     <string name="setup_label">Trello setup</string>
     <string name="tasks_label">Tasks</string>
     <string name="timer_label">Timer</string>
@@ -29,6 +30,10 @@
     <string name="task_done_comment">Task finished after %1$d pomodoros, total %2$s</string>
     <string name="dismiss_note">Dimissing this popup will place this card back in your to-do list</string>
 
+    <string name="error_trello_login">There was an error connecting to Trello. Please try again later</string>
+    <string name="error_loading_boards">An error occurred while loading Trello boards</string>
+    <string name="error_loading_lists">An error occurred while loading Trello lists</string>
+    <string name="error_loading_cards">An error occurred while loading Trello cards</string>
     <string name="error_task_sync">An error occurred while updating the task</string>
     <string name="error_card_move">An error occurred while moving the Trello card</string>
     <string name="error_comment_creation">An error occurred while adding the Trello comment</string>

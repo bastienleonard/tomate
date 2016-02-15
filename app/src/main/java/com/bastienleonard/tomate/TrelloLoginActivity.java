@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.bastienleonard.tomate.trello.TrelloCredentials;
 
@@ -42,11 +43,11 @@ public final class TrelloLoginActivity extends AppCompatActivity {
             if (url.startsWith("https://developers.trello.com/#token=")) {
                 String token = url.substring(url.indexOf("=") + 1);
 
-                if (TrelloCredentials.persistToken(view.getContext(), token)) {
-                    TrelloLoginActivity.this.finish();
-                } else {
-                    // FIXME: show error message
+                if (!TrelloCredentials.persistToken(view.getContext(), token)) {
+                    Toast.makeText(view.getContext(), R.string.error_trello_login, Toast.LENGTH_SHORT).show();
                 }
+
+                TrelloLoginActivity.this.finish();
             }
 
             view.loadUrl(url);

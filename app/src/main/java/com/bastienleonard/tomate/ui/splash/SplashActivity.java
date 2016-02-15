@@ -106,15 +106,14 @@ public final class SplashActivity extends BaseActivity implements Handler.Callba
 
     @Override
     public void onLoadFinished(Loader<List<Task>> loader, List<Task> tasks) {
-        if (tasks == null) {
-            // TODO
-        } else {
+        if (tasks != null) {
             TomateApp.get().getTaskCache().setTasks(tasks);
-            mTasksLoaded = true;
+        }
 
-            if (mRemaining < 0L) {
-                goNext(this);
-            }
+        mTasksLoaded = true;
+
+        if (mRemaining < 0L) {
+            goNext(this);
         }
     }
 

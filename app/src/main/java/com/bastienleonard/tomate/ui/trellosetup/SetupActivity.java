@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -79,6 +81,8 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     private static final String STATE_DONE_ID = "doneId";
     private static final String STATE_STEP = "step";
 
+    private CoordinatorLayout mCoordinator;
+
     private Step mCurrentStep = Step.BOARD;
     private String mBoardId;
     private String mToDoId;
@@ -91,6 +95,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setup_activity);
         setupToolbar();
+        mCoordinator = (CoordinatorLayout) findViewById(R.id.coordinator);
         getSupportLoaderManager().initLoader(BOARDS_LOADER_ID, null, new BoardsLoaderCallbacks());
 
         if (savedInstanceState == null) {
@@ -131,7 +136,6 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
                     .commit();
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
         } else {
-            // FIXME: handle error
             LogUtils.e(TAG, "Failed to save board ID for " + board);
         }
     }
@@ -149,7 +153,6 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
                     .commit();
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
         } else {
-            // FIXME: handle error
             LogUtils.e(TAG, "Failed to save todo list ID for " + list);
         }
     }
@@ -168,7 +171,6 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
             getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
 
         } else {
-            // FIXME: handle error
             LogUtils.e(TAG, "Failed to save doing list ID for " + list);
         }
     }
@@ -180,7 +182,6 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         if (Facade.saveDoneListId(this, mDoneId)) {
             LogUtils.i(TAG, "User picked done list " + list);
         } else {
-            // FIXME: handle error
             LogUtils.e(TAG, "Failed to save done list ID for " + list);
         }
     }
@@ -231,9 +232,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         @Override
         public void onLoadFinished(Loader<List<Board>> loader, final List<Board> data) {
             if (data == null) {
-                // TODO
-            } else if (data.size() == 0) {
-                // TODO
+                Snackbar.make(mCoordinator, R.string.error_loading_boards, Snackbar.LENGTH_LONG).show();
             } else {
                 mHandler.post(new Runnable() {
                     @Override
@@ -258,9 +257,7 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         @Override
         public void onLoadFinished(Loader<List<TrelloList>> loader, final List<TrelloList> data) {
             if (data == null) {
-                // TODO
-            } else if (data.size() == 0) {
-                // TODO
+                Snackbar.make(mCoordinator, R.string.error_loading_lists, Snackbar.LENGTH_LONG).show();
             } else {
                 mHandler.post(new Runnable() {
                     @Override
