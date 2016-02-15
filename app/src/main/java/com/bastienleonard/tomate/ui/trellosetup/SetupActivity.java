@@ -28,8 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// FIXME: handle back press correctly
-// FIXME: show loading animations
 public final class SetupActivity extends BaseActivity implements OnItemPickedListener {
     private enum Step implements Parcelable {
         BOARD(R.string.board_label),
@@ -106,11 +104,12 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         setContentView(R.layout.setup_activity);
         setupToolbar();
         mCoordinator = (CoordinatorLayout) findViewById(R.id.coordinator);
-        getSupportLoaderManager().initLoader(BOARDS_LOADER_ID, null, new BoardsLoaderCallbacks());
+        requestBoards();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, BoardPickerFragment.newInstance(), Step.BOARD.getTag())
+                    .addToBackStack(null)
                     .commit();
         } else {
             mBoardId = savedInstanceState.getString(STATE_BOARD_ID);
@@ -133,18 +132,32 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         outState.putParcelable(STATE_STEP, mCurrentStep);
     }
 
+    public void requestBoards() {
+        updateCurrentStep(Step.BOARD);
+        getSupportLoaderManager().initLoader(BOARDS_LOADER_ID, null, new BoardsLoaderCallbacks());
+    }
+
+    public void requestToDo() {
+        updateCurrentStep(Step.TO_DO);
+        getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
+    }
+
+    public void requestDoing() {
+        updateCurrentStep(Step.DOING);
+        getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
+    }
+
     @Override
     public void onBoardPicked(Board board) {
         mBoardId = board.getId();
 
         if (Facade.saveBoardId(this, mBoardId)) {
-            updateCurrentStep(Step.TO_DO);
-            LogUtils.i(TAG, "User picked board " + board);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, ToDoListPickerFragment.newInstance(), Step.TO_DO.getTag())
                     .addToBackStack(null)
                     .commit();
-            getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
+            requestToDo();
+            LogUtils.i(TAG, "User picked board " + board);
         } else {
             LogUtils.e(TAG, "Failed to save board ID for " + board);
         }
@@ -155,13 +168,12 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         mToDoId = list.getId();
 
         if (Facade.saveToDoListId(this, mToDoId)) {
-            updateCurrentStep(Step.DOING);
-            LogUtils.i(TAG, "User picked to-do list " + list);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, DoingListPickerFragment.newInstance(), Step.DOING.getTag())
                     .addToBackStack(null)
                     .commit();
-            getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
+            requestDoing();
+            LogUtils.i(TAG, "User picked to-do list " + list);
         } else {
             LogUtils.e(TAG, "Failed to save todo list ID for " + list);
         }

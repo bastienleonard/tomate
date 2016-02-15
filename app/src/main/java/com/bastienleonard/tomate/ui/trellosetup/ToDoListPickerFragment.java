@@ -8,6 +8,12 @@ public final class ToDoListPickerFragment extends BasePickerFragment<TrelloList>
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        ((SetupActivity) getActivity()).requestToDo();
+    }
+
+    @Override
     public void onItemClicked(TrelloList list) {
         // We want the app to crash if the activity doesn't implement this, it's not recoverable
         // and has to be caught during development

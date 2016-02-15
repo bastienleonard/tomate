@@ -8,6 +8,12 @@ public final class DoingListPickerFragment extends BasePickerFragment<TrelloList
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        ((SetupActivity) getActivity()).requestDoing();
+    }
+
+    @Override
     public void onItemClicked(TrelloList list) {
         // See comment in BoardPickerFragment
         OnItemPickedListener l = (OnItemPickedListener) getActivity();
