@@ -12,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import com.bastienleonard.tomate.BaseActivity;
 import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
 import com.bastienleonard.tomate.persistence.Facade;
@@ -27,7 +28,7 @@ import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-public final class SplashActivity extends AppCompatActivity implements Handler.Callback, LoaderManager.LoaderCallbacks<List<Task>> {
+public final class SplashActivity extends BaseActivity implements Handler.Callback, LoaderManager.LoaderCallbacks<List<Task>> {
     private static final int WHAT_CONTINUE = 1;
     private static final String STATE_REMAINING = "remaining";
     private static final String STATE_TASKS_LOADED = "tasksLoaded";
@@ -41,7 +42,6 @@ public final class SplashActivity extends AppCompatActivity implements Handler.C
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.splash_activity);
 
         if (savedInstanceState != null) {
