@@ -22,6 +22,7 @@
     <string name="resume">Resume</string>
     <string name="stop">Stop</string>
 
+    <string name="podomoro_ended_title">Podomoro ended!</string>
     <string name="done">Done</string>
     <string name="short_break">Short break</string>
     <string name="long_break">Long break</string>
