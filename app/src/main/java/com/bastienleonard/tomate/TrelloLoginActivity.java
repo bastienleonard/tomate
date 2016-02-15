@@ -1,5 +1,6 @@
 package com.bastienleonard.tomate;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.bastienleonard.tomate.trello.TrelloCredentials;
+import com.bastienleonard.tomate.ui.tasks.TasksActivity;
+import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 
 public final class TrelloLoginActivity extends AppCompatActivity {
     @Override
@@ -45,6 +48,12 @@ public final class TrelloLoginActivity extends AppCompatActivity {
 
                 if (!TrelloCredentials.persistToken(view.getContext(), token)) {
                     Toast.makeText(view.getContext(), R.string.error_trello_login, Toast.LENGTH_SHORT).show();
+                }
+
+                if (SetupActivity.trelloFullySetup(TrelloLoginActivity.this)) {
+                    startActivity(new Intent(TrelloLoginActivity.this, TasksActivity.class));
+                } else {
+                    startActivity(new Intent(TrelloLoginActivity.this, SetupActivity.class));
                 }
 
                 TrelloLoginActivity.this.finish();

@@ -1,6 +1,7 @@
 package com.bastienleonard.tomate.ui.trellosetup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -10,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 
 import com.bastienleonard.tomate.BaseActivity;
 import com.bastienleonard.tomate.persistence.Facade;
@@ -18,6 +20,7 @@ import com.bastienleonard.tomate.trello.loaders.BoardsLoader;
 import com.bastienleonard.tomate.trello.loaders.ListsLoader;
 import com.bastienleonard.tomate.trello.models.Board;
 import com.bastienleonard.tomate.trello.models.TrelloList;
+import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.utils.LogUtils;
 
 import java.util.ArrayList;
@@ -89,6 +92,13 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     private String mDoingId;
     private String mDoneId;
     private Handler mHandler;
+
+    public static boolean trelloFullySetup(Context context) {
+        return !TextUtils.isEmpty(Facade.getBoardId(context)) &&
+                !TextUtils.isEmpty(Facade.getToDoListId(context)) &&
+                !TextUtils.isEmpty(Facade.getDoingListId(context)) &&
+                !TextUtils.isEmpty(Facade.getDoneListId(context));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +194,9 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         } else {
             LogUtils.e(TAG, "Failed to save done list ID for " + list);
         }
+
+        startActivity(new Intent(this, TasksActivity.class));
+        finish();
     }
 
     private BoardPickerFragment getBoardsFragment() {

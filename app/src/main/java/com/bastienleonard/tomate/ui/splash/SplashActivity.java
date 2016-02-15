@@ -124,17 +124,10 @@ public final class SplashActivity extends BaseActivity implements Handler.Callba
     private static void goNext(Context context) {
         if (TextUtils.isEmpty(TrelloCredentials.getPersistedToken(context))) {
             context.startActivity(new Intent(context, TrelloLoginActivity.class));
-        } else if (trelloFullySetup(context)) {
+        } else if (SetupActivity.trelloFullySetup(context)) {
             context.startActivity(new Intent(context, TasksActivity.class));
         } else {
             context.startActivity(new Intent(context, SetupActivity.class));
         }
-    }
-
-    private static boolean trelloFullySetup(Context context) {
-        return !TextUtils.isEmpty(Facade.getBoardId(context)) &&
-                !TextUtils.isEmpty(Facade.getToDoListId(context)) &&
-                !TextUtils.isEmpty(Facade.getDoingListId(context)) &&
-                !TextUtils.isEmpty(Facade.getDoneListId(context));
     }
 }
