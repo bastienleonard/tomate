@@ -57,11 +57,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     @Override
     public void onTimerClicked(Card card){
         Task task = TomateApp.get().getTaskCache().get(card.getId());
-
-        if (task == null) {
-            getLoaderManager().initLoader(MOVE_CARD_LOADER_ID, null, new MoveCardLoaderCallbacks(card.getId(), Facade.getDoingListId(getContext())));
-        }
-
+        getLoaderManager().initLoader(MOVE_CARD_LOADER_ID, null, new MoveCardLoaderCallbacks(card.getId(), Facade.getDoingListId(getContext())));
         Intent intent = new Intent(getContext(), TimerActivity.class);
         TimerActivity.fillIntent(intent, card.getId(), task);
         startActivity(intent);
