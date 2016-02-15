@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.bastienleonard.tomate.utils.LogUtils;
-
 import java.util.concurrent.TimeUnit;
 
 public final class Task implements Parcelable {
@@ -64,7 +62,6 @@ public final class Task implements Parcelable {
     }
 
     public String getPrettyTotalTime() {
-        LogUtils.d(TAG, "Converting " + mTotalTime + "ms to duration");
         long hours = TimeUnit.MILLISECONDS.toHours(mTotalTime);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(mTotalTime) - TimeUnit.HOURS.toMinutes(hours);
         return String.format("%dh%02d", hours, minutes);
