@@ -10,12 +10,17 @@ import com.bastienleonard.tomate.trello.models.TrelloList;
 import com.bastienleonard.tomate.trello.parsers.BoardsParser;
 import com.bastienleonard.tomate.trello.parsers.CardsParser;
 import com.bastienleonard.tomate.trello.parsers.ListsParser;
+import com.bastienleonard.tomate.utils.LogUtils;
+import com.bastienleonard.tomate.utils.StreamUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: remove context parameters
 public final class Webservices {
+    private static final String TAG = "Webservices";
+
     private Webservices() {
     }
 
@@ -54,7 +59,18 @@ public final class Webservices {
                 .toString();
         List<Pair<String, String>> args = new ArrayList<>();
         args.add(Pair.create("value", listId));
-        Http.put(url, args).close();
+        Http.put(url, args);
+    }
+
+    public static void addComment(Context context, String appKey, String token, String cardId, String text)
+            throws IOException {
+        String url = getBaseUrlBuilder(appKey, token)
+                .path("1/cards/" + cardId + "/actions/comments")
+                .build()
+                .toString();
+        List<Pair<String, String>> args = new ArrayList<>();
+        args.add(Pair.create("text", text));
+        Http.post(url, args).close();
     }
 
     private static Uri.Builder getBaseUrlBuilder(String appKey, String token) {

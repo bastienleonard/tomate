@@ -1,8 +1,11 @@
 package com.bastienleonard.tomate.trello;
 
+import android.support.annotation.Nullable;
 import android.util.Pair;
 
+import com.bastienleonard.tomate.BuildConfig;
 import com.bastienleonard.tomate.utils.LogUtils;
+import com.bastienleonard.tomate.utils.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +26,7 @@ public final class Http {
 
     public static InputStream get(String url)
             throws IOException {
-        LogUtils.d(TAG, "GET request to " + url);
+        debugLog("GET", url, null);
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -31,7 +34,7 @@ public final class Http {
         Response response = CLIENT.newCall(request).execute();
 
         if (!response.isSuccessful()) {
-            throw new IOException("Unexpected code " + response);
+            onError(response);
         }
 
         return response.body().byteStream();
@@ -39,7 +42,7 @@ public final class Http {
 
     public static InputStream put(String url, List<Pair<String, String>> args)
             throws IOException {
-        LogUtils.d(TAG, "PUT request to " + url);
+        debugLog("PUT", url, args);
         FormBody.Builder bodyBuilder = new FormBody.Builder();
 
         for (Pair<String, String> pair: args) {
@@ -55,9 +58,61 @@ public final class Http {
         Response response = CLIENT.newCall(request).execute();
 
         if (!response.isSuccessful()) {
-            throw new IOException("Unexpected code " + response);
+            onError(response);
         }
 
         return response.body().byteStream();
+    }
+
+    public static InputStream post(String url, List<Pair<String, String>> args)
+            throws IOException {
+        debugLog("POST", url, args);
+        FormBody.Builder bodyBuilder = new FormBody.Builder();
+
+        for (Pair<String, String> pair: args) {
+            bodyBuilder.add(pair.first, pair.second);
+        }
+
+        RequestBody formBody = bodyBuilder.build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+        Response response = CLIENT.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            onError(response);
+        }
+
+        return response.body().byteStream();
+    }
+
+    private static void debugLog(String method, String url, @Nullable List<Pair<String, String>> args) {
+        String argsString;
+
+        if (BuildConfig.DEBUG) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("{ ");
+
+            if (args != null) {
+                for (Pair<String, String> pair : args) {
+                    sb.append(pair.first + ": " + pair.second + ", ");
+                }
+            }
+
+            sb.append(" }");
+            argsString = sb.toString();
+        } else {
+            argsString = "??";
+        }
+
+        LogUtils.d(TAG, method + " request to " + url + ", args: " + argsString);
+    }
+
+    private static void onError(Response response)
+            throws IOException {
+        String body = StreamUtils.inputStreamToString(response.body().byteStream());
+        throw new IOException("Unexpected code " + response + ", body=" + body);
     }
 }

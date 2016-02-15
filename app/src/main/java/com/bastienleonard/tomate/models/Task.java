@@ -4,7 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.bastienleonard.tomate.utils.LogUtils;
+
+import java.util.concurrent.TimeUnit;
+
 public final class Task implements Parcelable {
+    private static final String TAG = "Task";
+    public static final long POMODORO_DURATION = 25 * 60 * 1000L;
     public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
         @Override
         public Task createFromParcel(Parcel in) {
@@ -43,6 +49,25 @@ public final class Task implements Parcelable {
 
     public long getTotalTime() {
         return mTotalTime;
+    }
+
+    public Task incPomodoros() {
+        return new Task(mCardId,
+                mPodomoros + 1,
+                mTotalTime + POMODORO_DURATION);
+    }
+
+    public Task addTime(long time) {
+        return new Task(mCardId,
+                mPodomoros,
+                mTotalTime + time);
+    }
+
+    public String getPrettyTotalTime() {
+        LogUtils.d(TAG, "Converting " + mTotalTime + "ms to duration");
+        long hours = TimeUnit.MILLISECONDS.toHours(mTotalTime);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(mTotalTime) - TimeUnit.HOURS.toMinutes(hours);
+        return String.format("%dh%02d", hours, minutes);
     }
 
     @Override

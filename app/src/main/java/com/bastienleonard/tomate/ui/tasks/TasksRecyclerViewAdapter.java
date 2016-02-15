@@ -10,9 +10,6 @@ import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
 import com.bastienleonard.tomate.trello.models.Card;
-import com.bastienleonard.tomate.utils.LogUtils;
-
-import java.util.concurrent.TimeUnit;
 
 public final class TasksRecyclerViewAdapter extends BaseAdapter<Card, ViewHolder> {
     public interface OnTimerClickedListener {
@@ -61,11 +58,7 @@ public final class TasksRecyclerViewAdapter extends BaseAdapter<Card, ViewHolder
         String timeSpent = "";
 
         if (task != null) {
-            long total = task.getTotalTime();
-            LogUtils.d(TAG, "Converting " + total + "ms to duration");
-            long hours = TimeUnit.MILLISECONDS.toHours(total);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(total) - TimeUnit.HOURS.toMinutes(hours);
-            timeSpent = String.format("%dh%02d", hours, minutes);
+            timeSpent = task.getPrettyTotalTime();
         }
 
         holder.timeSpent.setText(timeSpent);

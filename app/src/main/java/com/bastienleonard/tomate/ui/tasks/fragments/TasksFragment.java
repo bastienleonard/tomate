@@ -105,6 +105,8 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
 
         @Override
         public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+            getLoaderManager().destroyLoader(MOVE_CARD_LOADER_ID);
+
             if (!data) {
                 // TODO
             }
