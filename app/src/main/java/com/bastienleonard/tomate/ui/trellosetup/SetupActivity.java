@@ -27,10 +27,10 @@ import java.util.Set;
 // FIXME: show loading animations
 public final class SetupActivity extends BaseActivity implements OnItemPickedListener {
     private enum Step implements Parcelable {
-        BOARD(R.string.title_board),
-        TO_DO(R.string.title_to_do),
-        DOING(R.string.title_doing),
-        DONE(R.string.title_done);
+        BOARD(R.string.board_label),
+        TO_DO(R.string.to_do_label),
+        DOING(R.string.doing_label),
+        DONE(R.string.done_label);
 
         public static final Creator<Step> CREATOR = new Creator<Step>() {
             @Override

@@ -33,6 +33,9 @@
         <activity android:name=".ui.timer.TimerActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/timer_label" />
+        <activity android:name=".ui.breaktimer.BreakTimerActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/break_label" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="46f49cc69ebe5f0bd7fdbd7ea04f4acf5a59ac60" />

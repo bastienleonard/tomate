@@ -1,9 +1,6 @@
 package com.bastienleonard.tomate.ui.timer;
 
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,7 +21,8 @@ import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.persistence.UpdateTaskLoader;
 import com.bastienleonard.tomate.trello.loaders.AddCommentLoader;
 import com.bastienleonard.tomate.trello.loaders.MoveCardLoader;
-import com.bastienleonard.tomate.utils.LogUtils;
+import com.bastienleonard.tomate.ui.breaktimer.BreakTimerActivity;
+import com.bastienleonard.tomate.utils.SoundUtils;
 
 import java.util.Locale;
 
@@ -211,9 +209,7 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void onPomodoroCompleted() {
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        RingtoneManager.getRingtone(getApplicationContext(), uri).play();
-
+        SoundUtils.playNotification(this);
         mTask = mTask.incPomodoros();
         getSupportLoaderManager().initLoader(TASK_UPDATE_LOADER_ID, null, new TaskUpdateLoaderCallbacks(mCardId, Task.POMODORO_DURATION, true));
         TimesUpDialogFragment.newInstance().show(getSupportFragmentManager(), null);
@@ -224,6 +220,21 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
                 Facade.getDoneListId(this)));
         String comment = getString(R.string.task_done_comment, mTask.getPodomoros(), mTask.getPrettyTotalTime());
         getSupportLoaderManager().initLoader(ADD_COMMENT_LOADER_ID, null, new AddCommentLoaderCallbacks(mCardId, comment));
+        finish();
+    }
+
+    public void onShortBreak() {
+        onBreak(BreakTimerActivity.BREAK_TYPE_SHORT);
+    }
+
+    public  void onLongBreak() {
+        onBreak(BreakTimerActivity.BREAK_TYPE_LONG);
+    }
+
+    private void onBreak(@BreakTimerActivity.BreakType int type) {
+        Intent intent = new Intent(this, BreakTimerActivity.class);
+        BreakTimerActivity.fillIntent(intent, type);
+        startActivity(intent);
         finish();
     }
 

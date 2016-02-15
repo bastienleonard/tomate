@@ -52,10 +52,10 @@ public final class TimesUpDialogFragment extends DialogFragment implements View.
                 done();
                 break;
             case R.id.short_break:
-                // TODO
+                onShortBreak();
                 break;
             case R.id.long_break:
-                // TODO
+                onLongBreak();
                 break;
         }
     }
@@ -63,6 +63,18 @@ public final class TimesUpDialogFragment extends DialogFragment implements View.
     private void done() {
         mMoveToToDo = false;
         ((TimerActivity) getActivity()).onTaskMarkedAsDone();
+        dismiss();
+    }
+
+    private void onShortBreak() {
+        mMoveToToDo = false;
+        ((TimerActivity) getActivity()).onShortBreak();
+        dismiss();
+    }
+
+    private void onLongBreak() {
+        mMoveToToDo = false;
+        ((TimerActivity) getActivity()).onLongBreak();
         dismiss();
     }
 
