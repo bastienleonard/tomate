@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bastienleonard.tomate.BaseAdapter;
 import com.bastienleonard.tomate.R;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-class Adapter<T extends Displayable> extends RecyclerView.Adapter<ViewHolder> {
+final class Adapter<T extends Displayable> extends BaseAdapter<T, ViewHolder> {
     public interface OnItemClickedListener<T> {
         void onItemClicked(T item);
     }
@@ -43,18 +44,13 @@ class Adapter<T extends Displayable> extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        T list = mItems.get(position);
+    protected void onBindItem(ViewHolder holder, T list, int position) {
         holder.text.setText(list.displayText());
     }
 
     @Override
-    public int getItemCount() {
-        return mItems.size();
-    }
-
     public void setItems(List<T> items) {
-        mItems = items;
+        super.setItems(items);
         Collections.sort(mItems, new Comparator<T>() {
             @Override
             public int compare(T a, T b) {

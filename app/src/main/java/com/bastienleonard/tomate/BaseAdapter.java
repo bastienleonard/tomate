@@ -24,7 +24,7 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
         return mItems.get(position);
     }
 
-    public void setItems(List<T> cards) {
-        mItems = cards;
+    public void setItems(List<T> items) {
+        mItems = items;
     }
 }
