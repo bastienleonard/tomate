@@ -24,6 +24,10 @@ public final class TasksCache {
 
     @Nullable
     public Task get(String cardId) {
+        if (mTasks == null) {
+            return null;
+        }
+
         return mTasks.get(cardId);
     }
 }
