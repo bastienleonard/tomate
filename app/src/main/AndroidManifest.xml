@@ -37,6 +37,10 @@
         <activity android:name=".ui.breaktimer.BreakTimerActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/break_label" />
+
+        <receiver android:name=".ui.timer.AlarmReceiver"
+            android:exported="false" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="46f49cc69ebe5f0bd7fdbd7ea04f4acf5a59ac60" />

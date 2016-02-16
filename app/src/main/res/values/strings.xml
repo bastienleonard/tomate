@@ -29,6 +29,8 @@
     <string name="long_break">Long break</string>
     <string name="task_done_comment">Task finished after %1$d pomodoros, total %2$s</string>
     <string name="dismiss_note">Dimissing this popup will place this card back in your to-do list</string>
+    <string name="timer_notification_title">Pomodoro ended!</string>
+    <string name="timer_notification_text">Decide what\'s next</string>
 
     <string name="error_trello_login">There was an error connecting to Trello. Please try again later</string>
     <string name="error_loading_boards">An error occurred while loading Trello boards</string>

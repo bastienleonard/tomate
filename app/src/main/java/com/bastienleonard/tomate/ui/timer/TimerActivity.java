@@ -1,6 +1,10 @@
 package com.bastienleonard.tomate.ui.timer;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +31,8 @@ import com.bastienleonard.tomate.utils.SoundUtils;
 import java.util.Locale;
 
 public final class TimerActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
+    public static final String EXTRA_SKIP_NEXT_SOUND = "skipNextSound";
+
     private static final String TAG = "TimerActivity";
     private static final String EXTRA_CARD_ID = "cardId";
     private static final String EXTRA_TASK = "task";
@@ -38,18 +44,21 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     private static final String STATE_RUNNING = "running";
     private static final String STATE_REMAINING_TIME = "remainingTime";
     private static final String STATE_LAST_TICK = "lastTick";
+    private static final String STATE_SKIP_NEXT_SOUND = "skipNextSound";
 
     private static final int TASK_UPDATE_LOADER_ID = 1;
     private static final int MOVE_CARD_LOADER_ID = 2;
     private static final int ADD_COMMENT_LOADER_ID = 3;
 
     private Handler mHandler;
+    private TimeActivityPresenceIndicator mTimeActivityPresenceIndicator = new TimeActivityPresenceIndicator();
 
     private String mCardId;
     private Task mTask;
     private boolean mRunning;
     private long mRemainingTime;
     private long mLastTick;
+    private boolean mSkipNextSound;
 
     private CoordinatorLayout mCoordinator;
     private TextView mTime;
@@ -62,14 +71,21 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mSkipNextSound = intent.getBooleanExtra(EXTRA_SKIP_NEXT_SOUND, false);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer_activity);
         setupToolbar();
 
         if (savedInstanceState == null) {
-            mCardId = getIntent().getStringExtra(EXTRA_CARD_ID);
-            mTask = getIntent().getParcelableExtra(EXTRA_TASK);
+            Intent intent = getIntent();
+            mCardId = intent.getStringExtra(EXTRA_CARD_ID);
+            mTask = intent.getParcelableExtra(EXTRA_TASK);
 
             if (mTask == null) {
                 mTask = new Task(mCardId, 0, 0L);
@@ -78,12 +94,15 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
             mRunning = true;
             mRemainingTime = Task.POMODORO_DURATION;
             mLastTick = SystemClock.elapsedRealtime();
+            mSkipNextSound = intent.getBooleanExtra(EXTRA_SKIP_NEXT_SOUND, false);
+            setupAlarm();
         } else {
             mCardId = savedInstanceState.getString(STATE_CARD_ID);
             mTask = savedInstanceState.getParcelable(STATE_TASK);
             mRunning = savedInstanceState.getBoolean(STATE_RUNNING);
             mRemainingTime = savedInstanceState.getLong(STATE_REMAINING_TIME);
             mLastTick = savedInstanceState.getLong(STATE_LAST_TICK);
+            mSkipNextSound = savedInstanceState.getBoolean(STATE_SKIP_NEXT_SOUND);
         }
 
         mCoordinator = (CoordinatorLayout) findViewById(R.id.coordinator);
@@ -100,6 +119,7 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
+        mTimeActivityPresenceIndicator.onStart(this);
 
         if (mRunning) {
             mHandler.sendEmptyMessage(WHAT_UPDATE_TIMER);
@@ -109,6 +129,7 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onStop() {
         super.onStop();
+        mTimeActivityPresenceIndicator.onStop(this);
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -120,6 +141,7 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
         outState.putBoolean(STATE_RUNNING, mRunning);
         outState.putLong(STATE_REMAINING_TIME, mRemainingTime);
         outState.putLong(STATE_LAST_TICK, mLastTick);
+        outState.putBoolean(STATE_SKIP_NEXT_SOUND, mSkipNextSound);
     }
 
     @Override
@@ -148,6 +170,20 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private void setupAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                0,
+                new Intent(this, AlarmReceiver.class),
+                0);
+
+        if (Build.VERSION.SDK_INT >= 19) {
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + mRemainingTime, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + mRemainingTime, pendingIntent);
         }
     }
 
@@ -209,7 +245,12 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void onPomodoroCompleted() {
-        SoundUtils.playNotification(this);
+        if (mSkipNextSound) {
+            mSkipNextSound = false;
+        } else {
+            SoundUtils.playNotification(this);
+        }
+
         mTask = mTask.incPomodoros();
         getSupportLoaderManager().initLoader(TASK_UPDATE_LOADER_ID, null, new TaskUpdateLoaderCallbacks(mCardId, Task.POMODORO_DURATION, true));
         TimesUpDialogFragment.newInstance().show(getSupportFragmentManager(), null);
