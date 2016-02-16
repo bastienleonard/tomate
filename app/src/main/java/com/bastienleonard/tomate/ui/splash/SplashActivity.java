@@ -9,24 +9,19 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import com.bastienleonard.tomate.BaseActivity;
 import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
-import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.R;
-import com.bastienleonard.tomate.TrelloLoginActivity;
+import com.bastienleonard.tomate.trello.TrelloLoginActivity;
 import com.bastienleonard.tomate.persistence.TasksLoader;
 import com.bastienleonard.tomate.trello.TrelloCredentials;
 import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
-import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
 
 public final class SplashActivity extends BaseActivity implements Handler.Callback, LoaderManager.LoaderCallbacks<List<Task>> {
     private static final int WHAT_CONTINUE = 1;

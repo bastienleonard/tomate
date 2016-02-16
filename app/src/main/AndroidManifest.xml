@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TrelloLoginActivity"
+        <activity android:name=".trello.TrelloLoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/login_label"/>
         <activity android:name=".ui.trellosetup.SetupActivity"
