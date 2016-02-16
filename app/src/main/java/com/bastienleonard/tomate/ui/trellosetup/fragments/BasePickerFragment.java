@@ -1,4 +1,4 @@
-package com.bastienleonard.tomate.ui.trellosetup;
+package com.bastienleonard.tomate.ui.trellosetup.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.ui.trellosetup.Adapter;
+import com.bastienleonard.tomate.ui.trellosetup.Displayable;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-final class Adapter<T extends Displayable> extends BaseAdapter<T, ViewHolder> {
+public final class Adapter<T extends Displayable> extends BaseAdapter<T, ViewHolder> {
     public interface OnItemClickedListener<T> {
         void onItemClicked(T item);
     }

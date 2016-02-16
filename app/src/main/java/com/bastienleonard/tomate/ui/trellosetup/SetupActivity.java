@@ -21,6 +21,11 @@ import com.bastienleonard.tomate.trello.loaders.ListsLoader;
 import com.bastienleonard.tomate.trello.models.Board;
 import com.bastienleonard.tomate.trello.models.TrelloList;
 import com.bastienleonard.tomate.ui.tasks.TasksActivity;
+import com.bastienleonard.tomate.ui.trellosetup.fragments.BasePickerFragment;
+import com.bastienleonard.tomate.ui.trellosetup.fragments.BoardPickerFragment;
+import com.bastienleonard.tomate.ui.trellosetup.fragments.DoingListPickerFragment;
+import com.bastienleonard.tomate.ui.trellosetup.fragments.DoneListPickerFragment;
+import com.bastienleonard.tomate.ui.trellosetup.fragments.ToDoListPickerFragment;
 import com.bastienleonard.tomate.utils.LogUtils;
 
 import java.util.ArrayList;
