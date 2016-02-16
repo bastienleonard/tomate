@@ -222,6 +222,8 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
 
         if (mRemainingTime <= 0L) {
             mRemainingTime = 0L;
+            mRunning = false;
+            mHandler.removeMessages(WHAT_UPDATE_TIMER);
             onPomodoroCompleted();
         } else if (mRunning) {
             mHandler.sendEmptyMessageDelayed(WHAT_UPDATE_TIMER, REFRESH_DELAY);
@@ -232,6 +234,15 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
         long ticks = mRemainingTime / 1000;
         long minutes = ticks / 60;
         long seconds = ticks % 60;
+
+        if (minutes < 0L) {
+            minutes = 0L;
+        }
+
+        if (seconds < 0L) {
+            seconds = 0L;
+        }
+
         mTime.setText(String.format(Locale.US, "%d:%02d",
                 minutes, seconds));
     }
