@@ -16,6 +16,7 @@ import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 
 public final class TrelloLoginActivity extends BaseActivity {
     private ExclusiveLayout mExclusiveLayout;
+    private WebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +25,9 @@ public final class TrelloLoginActivity extends BaseActivity {
         setupToolbar();
         mExclusiveLayout = (ExclusiveLayout) findViewById(R.id.exclusive_layout);
 
-        WebView webView = (WebView) findViewById(R.id.web_view);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new Client());
+        mWebView = (WebView) findViewById(R.id.web_view);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.setWebViewClient(new Client());
         String url = new Uri.Builder()
                 .scheme("https")
                 .authority("trello.com")
@@ -40,7 +41,16 @@ public final class TrelloLoginActivity extends BaseActivity {
                 .appendQueryParameter("expiration", "never")
                 .build()
                 .toString();
-        webView.loadUrl(url);
+        mWebView.loadUrl(url);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private final class Client extends WebViewClient {
