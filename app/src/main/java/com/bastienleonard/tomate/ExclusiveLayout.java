@@ -47,6 +47,14 @@ public class ExclusiveLayout extends FrameLayout {
         return mCurrent;
     }
 
+    public void showFirst() {
+        show(0);
+    }
+
+    public void showLast() {
+        show(getChildCount() - 1);
+    }
+
     public void showNext() {
         show(mCurrent + 1);
     }

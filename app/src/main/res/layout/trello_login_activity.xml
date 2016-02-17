@@ -32,9 +32,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <WebView android:id="@+id/web_view"
+        <com.bastienleonard.tomate.ExclusiveLayout android:id="@+id/exclusive_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+            <ProgressBar android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+            <WebView android:id="@+id/web_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.bastienleonard.tomate.ExclusiveLayout>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

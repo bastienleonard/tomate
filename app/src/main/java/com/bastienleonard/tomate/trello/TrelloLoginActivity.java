@@ -1,25 +1,28 @@
 package com.bastienleonard.tomate.trello;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.bastienleonard.tomate.BaseActivity;
+import com.bastienleonard.tomate.ExclusiveLayout;
 import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 
-public final class TrelloLoginActivity extends AppCompatActivity {
+public final class TrelloLoginActivity extends BaseActivity {
+    private ExclusiveLayout mExclusiveLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trello_login_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setupToolbar();
+        mExclusiveLayout = (ExclusiveLayout) findViewById(R.id.exclusive_layout);
 
         WebView webView = (WebView) findViewById(R.id.web_view);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -61,6 +64,18 @@ public final class TrelloLoginActivity extends AppCompatActivity {
 
             view.loadUrl(url);
             return true;
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            mExclusiveLayout.showFirst();
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            mExclusiveLayout.showLast();
+            super.onPageFinished(view, url);
         }
     }
 }
