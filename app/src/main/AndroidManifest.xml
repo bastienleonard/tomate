@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".trello.TrelloLoginActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/login_label"/>
         <activity android:name=".ui.trellosetup.SetupActivity"
