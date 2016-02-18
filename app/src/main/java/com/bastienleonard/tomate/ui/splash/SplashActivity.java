@@ -1,5 +1,6 @@
 package com.bastienleonard.tomate.ui.splash;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -116,13 +117,15 @@ public final class SplashActivity extends BaseActivity implements Handler.Callba
     public void onLoaderReset(Loader<List<Task>> loader) {
     }
 
-    private static void goNext(Context context) {
-        if (TextUtils.isEmpty(TrelloCredentials.getPersistedToken(context))) {
-            context.startActivity(new Intent(context, TrelloLoginActivity.class));
-        } else if (SetupActivity.trelloFullySetup(context)) {
-            context.startActivity(new Intent(context, TasksActivity.class));
+    private static void goNext(Activity activity) {
+        if (TextUtils.isEmpty(TrelloCredentials.getPersistedToken(activity))) {
+            activity.startActivity(new Intent(activity, TrelloLoginActivity.class));
+        } else if (SetupActivity.trelloFullySetup(activity)) {
+            activity.startActivity(new Intent(activity, TasksActivity.class));
         } else {
-            context.startActivity(new Intent(context, SetupActivity.class));
+            activity.startActivity(new Intent(activity, SetupActivity.class));
         }
+
+        activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }
