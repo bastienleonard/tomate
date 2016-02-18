@@ -6,7 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.bastienleonard.tomate.R;
 
@@ -28,11 +28,11 @@ public final class TimesUpDialogFragment extends DialogFragment implements View.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.times_up_dialog_fragment, container, false);
-        Button done = (Button) view.findViewById(R.id.done);
+        TextView done = (TextView) view.findViewById(R.id.done);
         done.setOnClickListener(this);
-        Button shortBreak = (Button) view.findViewById(R.id.short_break);
+        TextView shortBreak = (TextView) view.findViewById(R.id.short_break);
         shortBreak.setOnClickListener(this);
-        Button longBreak = (Button) view.findViewById(R.id.long_break);
+        TextView longBreak = (TextView) view.findViewById(R.id.long_break);
         longBreak.setOnClickListener(this);
         return view;
     }
