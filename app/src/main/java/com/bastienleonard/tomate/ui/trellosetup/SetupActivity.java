@@ -114,7 +114,6 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, BoardPickerFragment.newInstance(), Step.BOARD.getTag())
-                    .addToBackStack(null)
                     .commit();
         } else {
             mBoardId = savedInstanceState.getString(STATE_BOARD_ID);
