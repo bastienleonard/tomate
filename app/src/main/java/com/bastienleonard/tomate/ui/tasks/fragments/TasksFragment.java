@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,14 +28,15 @@ import com.bastienleonard.tomate.ui.timer.TimerActivity;
 
 import java.util.List;
 
-public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.OnTimerClickedListener, LoaderManager.LoaderCallbacks<List<Card>> {
+public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.OnTimerClickedListener, SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<List<Card>> {
     protected static final String ARG_LIST_ID = "listId";
     private static final int CARDS_LOADER_ID = 1;
     private static final int MOVE_CARD_LOADER_ID = 2;
 
     private BaseAdapter<Card, ? extends RecyclerView.ViewHolder> mAdapter;
-    private ExclusiveLayout mExclusiveLayout;
     private CoordinatorLayout mCoordinator;
+    private ExclusiveLayout mExclusiveLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     protected BaseAdapter<Card, ? extends RecyclerView.ViewHolder> createAdapter() {
         return new TasksRecyclerViewAdapter(this);
@@ -45,6 +47,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
         View view = inflater.inflate(R.layout.tasks_fragment, container, false);
         mCoordinator = (CoordinatorLayout) view.findViewById(R.id.coordinator);
         mExclusiveLayout = (ExclusiveLayout) view.findViewById(R.id.exclusive_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
         mAdapter = createAdapter();
         list.setAdapter(mAdapter);
@@ -56,6 +59,7 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(CARDS_LOADER_ID, null, this);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -68,12 +72,20 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     }
 
     @Override
+    public void onRefresh() {
+        getLoaderManager().initLoader(CARDS_LOADER_ID, null, TasksFragment.this);
+    }
+
+    @Override
     public Loader<List<Card>> onCreateLoader(int i, Bundle bundle) {
         return new CardsLoader(getContext(), getArguments().getString(ARG_LIST_ID));
     }
 
     @Override
     public void onLoadFinished(Loader<List<Card>> loader, List<Card> cards) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        getLoaderManager().destroyLoader(CARDS_LOADER_ID);
+
         if (cards == null) {
             Snackbar.make(mCoordinator, R.string.error_loading_cards, Snackbar.LENGTH_LONG).show();
         } else if (cards.size() == 0) {

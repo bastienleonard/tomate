@@ -96,6 +96,9 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
     private String mDoneId;
     private Handler mHandler;
 
+    private final BoardsLoaderCallbacks mBoardsLoaderCallbacks = new BoardsLoaderCallbacks();
+    private final ListsLoaderCallbacks mListsLoaderCallbacks = new ListsLoaderCallbacks();
+
     public static boolean trelloFullySetup(Context context) {
         return !TextUtils.isEmpty(Facade.getBoardId(context)) &&
                 !TextUtils.isEmpty(Facade.getToDoListId(context)) &&
@@ -109,7 +112,6 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         setContentView(R.layout.setup_activity);
         setupToolbar();
         mCoordinator = (CoordinatorLayout) findViewById(R.id.coordinator);
-        requestBoards();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -138,17 +140,22 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
 
     public void requestBoards() {
         updateCurrentStep(Step.BOARD);
-        getSupportLoaderManager().initLoader(BOARDS_LOADER_ID, null, new BoardsLoaderCallbacks());
+        getSupportLoaderManager().restartLoader(BOARDS_LOADER_ID, null, mBoardsLoaderCallbacks);
     }
 
     public void requestToDo() {
         updateCurrentStep(Step.TO_DO);
-        getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
+        getSupportLoaderManager().restartLoader(LISTS_LOADER_ID, null, mListsLoaderCallbacks);
     }
 
     public void requestDoing() {
         updateCurrentStep(Step.DOING);
-        getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
+        getSupportLoaderManager().restartLoader(LISTS_LOADER_ID, null, mListsLoaderCallbacks);
+    }
+
+    public void requestDone() {
+        updateCurrentStep(Step.DONE);
+        getSupportLoaderManager().restartLoader(LISTS_LOADER_ID, null, mListsLoaderCallbacks);
     }
 
     @Override
@@ -188,14 +195,12 @@ public final class SetupActivity extends BaseActivity implements OnItemPickedLis
         mDoingId = list.getId();
 
         if (Facade.saveDoingListId(this, mDoingId)) {
-            updateCurrentStep(Step.DONE);
             LogUtils.i(TAG, "User picked doing list " + list);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, DoneListPickerFragment.newInstance(), Step.DONE.getTag())
                     .addToBackStack(null)
                     .commit();
-            getSupportLoaderManager().initLoader(LISTS_LOADER_ID, null, new ListsLoaderCallbacks());
-
+            requestDone();
         } else {
             LogUtils.e(TAG, "Failed to save doing list ID for " + list);
         }

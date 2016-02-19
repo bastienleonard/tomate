@@ -12,7 +12,7 @@ public final class BoardPickerFragment extends BasePickerFragment<Board> {
     @Override
     public void onStart() {
         super.onStart();
-        ((SetupActivity) getActivity()).requestBoards();
+        onRefresh();
     }
 
     @Override
@@ -24,5 +24,8 @@ public final class BoardPickerFragment extends BasePickerFragment<Board> {
         l.onBoardPicked(board);
     }
 
+    @Override
+    public void onRefresh() {
+        ((SetupActivity) getActivity()).requestBoards();
     }
 }

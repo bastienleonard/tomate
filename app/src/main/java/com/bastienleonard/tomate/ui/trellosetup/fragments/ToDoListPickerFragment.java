@@ -12,7 +12,7 @@ public final class ToDoListPickerFragment extends BasePickerFragment<TrelloList>
     @Override
     public void onStart() {
         super.onStart();
-        ((SetupActivity) getActivity()).requestToDo();
+        onRefresh();
     }
 
     @Override
@@ -22,5 +22,10 @@ public final class ToDoListPickerFragment extends BasePickerFragment<TrelloList>
         OnItemPickedListener l = (OnItemPickedListener) getActivity();
 
         l.onTodoListPicked(list);
+    }
+
+    @Override
+    public void onRefresh() {
+        ((SetupActivity) getActivity()).requestToDo();
     }
 }
