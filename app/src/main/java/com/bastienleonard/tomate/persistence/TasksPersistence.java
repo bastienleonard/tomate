@@ -1,16 +1,15 @@
 package com.bastienleonard.tomate.persistence;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.SimpleArrayMap;
 
 import com.bastienleonard.tomate.models.Task;
 import com.bastienleonard.tomate.utils.LogUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 final class TasksPersistence {
     private static final String TAG = "TasksPersistence";
@@ -22,31 +21,37 @@ final class TasksPersistence {
     private TasksPersistence() {
     }
 
-    public static String toJson(List<Task> tasks)
+    public static String toJson(SimpleArrayMap<String, Task> tasks)
             throws JSONException {
         JSONObject root = new JSONObject();
-        JSONArray jsonTasks = new JSONArray();
+        JSONObject jsonTasks = new JSONObject();
 
-        for (Task task: tasks) {
-            jsonTasks.put(toJson(task));
+        for (int i = 0; i < tasks.size(); ++i) {
+            String cardId = tasks.keyAt(i);
+            Task task = tasks.valueAt(i);
+            jsonTasks.put(cardId, toJson(task));
         }
 
         root.put(KEY_TASKS, jsonTasks);
-        return root.toString();
+        String json = root.toString();
+        LogUtils.d(TAG, "Generated tasks JSON " + json);
+        return json;
     }
 
-    public static List<Task> fromJson(String json)
+    public static SimpleArrayMap<String, Task> fromJson(String json)
             throws JSONException {
+        LogUtils.d(TAG, "Parsing " + json);
         JSONObject root = new JSONObject(json);
-        JSONArray jsonTasks = root.getJSONArray(KEY_TASKS);
-        List<Task> tasks = new ArrayList<>();
+        JSONObject jsonTasks = root.getJSONObject(KEY_TASKS);
+        SimpleArrayMap<String, Task> tasks = new SimpleArrayMap<>();
+        Iterator<String> iterator = jsonTasks.keys();
 
-        for (int i = 0; i < jsonTasks.length(); ++i) {
-            JSONObject jsonTask = jsonTasks.getJSONObject(i);
-            tasks.add(fromJson(jsonTask));
+        while (iterator.hasNext()) {
+            String cardId = iterator.next();
+            JSONObject jsonTask = jsonTasks.getJSONObject(cardId);
+            tasks.put(cardId, fromJson(cardId, jsonTask));
         }
 
-        LogUtils.d(TAG, "Loaded tasks " + tasks);
         return tasks;
     }
 
@@ -54,16 +59,15 @@ final class TasksPersistence {
     private static JSONObject toJson(@NonNull Task task)
             throws JSONException {
         JSONObject jsonTask = new JSONObject();
-        jsonTask.put(KEY_CARD_ID, task.getCardId());
         jsonTask.put(KEY_POMODOROS, task.getPodomoros());
         jsonTask.put(KEY_TOTAL_TIME, task.getTotalTime());
         return jsonTask;
     }
 
     @NonNull
-    private static Task fromJson(@NonNull JSONObject jsonTask)
+    private static Task fromJson(@NonNull String cardId, @NonNull JSONObject jsonTask)
             throws JSONException {
-        return new Task(jsonTask.getString(KEY_CARD_ID),
+        return new Task(cardId,
                 jsonTask.getInt(KEY_POMODOROS),
                 jsonTask.getLong(KEY_TOTAL_TIME));
     }

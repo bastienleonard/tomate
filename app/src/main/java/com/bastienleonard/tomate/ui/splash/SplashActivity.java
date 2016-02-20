@@ -1,7 +1,6 @@
 package com.bastienleonard.tomate.ui.splash;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,21 +9,22 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 
 import com.bastienleonard.tomate.BaseActivity;
+import com.bastienleonard.tomate.R;
 import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
-import com.bastienleonard.tomate.R;
-import com.bastienleonard.tomate.trello.TrelloLoginActivity;
 import com.bastienleonard.tomate.persistence.TasksLoader;
 import com.bastienleonard.tomate.trello.TrelloCredentials;
+import com.bastienleonard.tomate.trello.TrelloLoginActivity;
 import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 
 import java.util.List;
 
-public final class SplashActivity extends BaseActivity implements Handler.Callback, LoaderManager.LoaderCallbacks<List<Task>> {
+public final class SplashActivity extends BaseActivity implements Handler.Callback, LoaderManager.LoaderCallbacks<SimpleArrayMap<String, Task>> {
     private static final int WHAT_CONTINUE = 1;
     private static final String STATE_REMAINING = "remaining";
     private static final String STATE_TASKS_LOADED = "tasksLoaded";
@@ -96,12 +96,12 @@ public final class SplashActivity extends BaseActivity implements Handler.Callba
     }
 
     @Override
-    public Loader<List<Task>> onCreateLoader(int id, Bundle args) {
+    public Loader<SimpleArrayMap<String, Task>> onCreateLoader(int id, Bundle args) {
         return new TasksLoader(this);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Task>> loader, List<Task> tasks) {
+    public void onLoadFinished(Loader<SimpleArrayMap<String, Task>> loader, SimpleArrayMap<String, Task> tasks) {
         if (tasks != null) {
             TomateApp.get().getTaskCache().setTasks(tasks);
         }
@@ -114,7 +114,7 @@ public final class SplashActivity extends BaseActivity implements Handler.Callba
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Task>> loader) {
+    public void onLoaderReset(Loader<SimpleArrayMap<String, Task>> loader) {
     }
 
     private static void goNext(Activity activity) {

@@ -11,15 +11,8 @@ public final class TasksCache {
     public TasksCache() {
     }
 
-    // FIXME: directly parse the tasks JSON as a map if we never never need them as a list
-    public void setTasks(List<Task> tasks) {
-        if (mTasks == null) {
-            mTasks = new SimpleArrayMap<>(tasks.size());
-        }
-
-        for (Task task: tasks) {
-            mTasks.put(task.getCardId(), task);
-        }
+    public void setTasks(SimpleArrayMap<String, Task> tasks) {
+        mTasks = tasks;
     }
 
     @Nullable

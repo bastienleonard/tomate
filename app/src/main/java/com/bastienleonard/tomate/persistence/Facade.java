@@ -4,15 +4,13 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 
 import com.bastienleonard.tomate.models.Task;
 import com.bastienleonard.tomate.utils.LogUtils;
 
 import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class Facade {
     private static final String TAG = "Persistence";
@@ -63,7 +61,7 @@ public final class Facade {
     }
 
     @CheckResult
-    public static boolean saveTasks(Context context, List<Task> tasks) {
+    public static boolean saveTasks(Context context, SimpleArrayMap<String, Task> tasks) {
         try {
             return saveString(context, KEY_TASKS, TasksPersistence.toJson(tasks));
         } catch (JSONException e) {
@@ -74,19 +72,21 @@ public final class Facade {
 
     @Nullable
     @WorkerThread
-    public static List<Task> getTasks(Context context) {
+    public static SimpleArrayMap<String, Task> getTasks(Context context) {
         LogUtils.d(TAG, "Loading tasks");
 
         try {
+            SimpleArrayMap<String, Task> ret;
             String json = getString(context, KEY_TASKS);
 
             if (TextUtils.isEmpty(json)) {
-                return new ArrayList<>();
+                ret = new SimpleArrayMap<>();
+            } else {
+                ret = TasksPersistence.fromJson(json);
             }
 
-            List<Task> tasks = TasksPersistence.fromJson(json);
-            LogUtils.d(TAG, "Loaded tasks");
-            return tasks;
+            LogUtils.d(TAG, "Loaded tasks " + ret);
+            return ret;
         } catch (JSONException e) {
             LogUtils.e(TAG, e);
             return null;

@@ -1,12 +1,11 @@
 package com.bastienleonard.tomate.persistence;
 
 import android.content.Context;
+import android.support.v4.util.SimpleArrayMap;
 
+import com.bastienleonard.tomate.BasicLoader;
 import com.bastienleonard.tomate.TomateApp;
 import com.bastienleonard.tomate.models.Task;
-import com.bastienleonard.tomate.BasicLoader;
-
-import java.util.List;
 
 public final class UpdateTaskLoader extends BasicLoader<Boolean> {
     private static final String TAG = "UpdateTaskLoader";
@@ -23,27 +22,17 @@ public final class UpdateTaskLoader extends BasicLoader<Boolean> {
 
     @Override
     public Boolean loadInBackground() {
-        List<Task> tasks = Facade.getTasks(getContext());
-        // TODO: save tasks as a map to avoid this list-map conversion, as well the list search
+        SimpleArrayMap<String, Task> tasks = Facade.getTasks(getContext());
 
         if (tasks != null) {
-            Task task = null;
-            int i = 0;
-
-            for (Task current : tasks) {
-                if (mCardId.equals(current.getCardId())) {
-                    task = current;
-                    break;
-                }
-
-                ++i;
-            }
+            Task task = tasks.get(mCardId);
 
             if (task == null) {
-                tasks.add(new Task(
+                tasks.put(mCardId, new Task(
                         mCardId,
                         mIncPomodoros ? 1 : 0,
-                        mTime));
+                        mTime
+                ));
             } else {
                 int pomodoros = task.getPodomoros();
 
@@ -51,7 +40,7 @@ public final class UpdateTaskLoader extends BasicLoader<Boolean> {
                     ++pomodoros;
                 }
 
-                tasks.set(i, new Task(
+                tasks.put(mCardId, new Task(
                         task.getCardId(),
                         pomodoros,
                         task.getTotalTime() + mTime
