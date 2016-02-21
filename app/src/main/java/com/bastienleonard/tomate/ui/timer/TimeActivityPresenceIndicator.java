@@ -3,7 +3,7 @@ package com.bastienleonard.tomate.ui.timer;
 import android.content.Context;
 
 final class TimeActivityPresenceIndicator {
-    private static final String PREF_NAME = "timer";
+    private static final String PREF_NAME = "timerPresenceIndicator";
     private static final String KEY_IS_OPEN = "isOpen";
 
     public static boolean isOpen(Context context) {
