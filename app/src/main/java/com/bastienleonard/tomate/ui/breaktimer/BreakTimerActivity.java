@@ -59,8 +59,7 @@ public class BreakTimerActivity extends BaseActivity implements Handler.Callback
 
             switch (mBreakType) {
                 case BREAK_TYPE_SHORT:
-                    //mRemainingTime = 5 * 60 * 1000L;
-                    mRemainingTime = 5 * 1000L;
+                    mRemainingTime = 5 * 60 * 1000L;
                     break;
                 case BREAK_TYPE_LONG:
                     mRemainingTime = 15 * 60 * 1000L;
