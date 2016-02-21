@@ -3,8 +3,6 @@ package com.bastienleonard.tomate.models;
 import android.support.annotation.Nullable;
 import android.support.v4.util.SimpleArrayMap;
 
-import java.util.List;
-
 public final class TasksCache {
     private SimpleArrayMap<String, Task> mTasks;
 

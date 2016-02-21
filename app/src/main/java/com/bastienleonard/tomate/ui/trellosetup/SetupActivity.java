@@ -14,8 +14,8 @@ import android.support.v4.content.Loader;
 import android.text.TextUtils;
 
 import com.bastienleonard.tomate.BaseActivity;
-import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.trello.loaders.BoardsLoader;
 import com.bastienleonard.tomate.trello.loaders.ListsLoader;
 import com.bastienleonard.tomate.trello.models.Board;

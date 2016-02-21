@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.persistence.Facade;
 import com.bastienleonard.tomate.ui.tasks.fragments.DoingTasksFragment;
 import com.bastienleonard.tomate.ui.tasks.fragments.DoneTasksFragment;
 import com.bastienleonard.tomate.ui.tasks.fragments.TodoTasksFragment;

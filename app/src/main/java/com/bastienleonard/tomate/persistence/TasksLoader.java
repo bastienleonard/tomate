@@ -6,8 +6,6 @@ import android.support.v4.util.SimpleArrayMap;
 import com.bastienleonard.tomate.BasicLoader;
 import com.bastienleonard.tomate.models.Task;
 
-import java.util.List;
-
 public final class TasksLoader extends BasicLoader<SimpleArrayMap<String, Task>> {
     private static final String TAG = "TasksLoader";
 

@@ -10,8 +10,6 @@ import com.bastienleonard.tomate.trello.models.TrelloList;
 import com.bastienleonard.tomate.trello.parsers.BoardsParser;
 import com.bastienleonard.tomate.trello.parsers.CardsParser;
 import com.bastienleonard.tomate.trello.parsers.ListsParser;
-import com.bastienleonard.tomate.utils.LogUtils;
-import com.bastienleonard.tomate.utils.StreamUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

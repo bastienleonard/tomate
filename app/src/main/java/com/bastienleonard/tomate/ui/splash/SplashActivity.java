@@ -22,8 +22,6 @@ import com.bastienleonard.tomate.trello.TrelloLoginActivity;
 import com.bastienleonard.tomate.ui.tasks.TasksActivity;
 import com.bastienleonard.tomate.ui.trellosetup.SetupActivity;
 
-import java.util.List;
-
 public final class SplashActivity extends BaseActivity implements Handler.Callback, LoaderManager.LoaderCallbacks<SimpleArrayMap<String, Task>> {
     private static final int WHAT_CONTINUE = 1;
     private static final String STATE_REMAINING = "remaining";
