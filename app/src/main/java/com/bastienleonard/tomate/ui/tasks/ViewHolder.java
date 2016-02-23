@@ -1,5 +1,6 @@
 package com.bastienleonard.tomate.ui.tasks;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,7 +11,7 @@ import com.bastienleonard.tomate.R;
 final class ViewHolder extends RecyclerView.ViewHolder {
     public final TextView name;
     public final TextView timeSpent;
-    public ImageView start;
+    @Nullable public ImageView start;
 
     public ViewHolder(View itemView) {
         super(itemView);

@@ -32,10 +32,12 @@ public final class TasksRecyclerViewAdapter extends BaseAdapter<Card, ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.tasks_fragment_item, parent, false);
+        View view = inflater.inflate(mTimerEnabled ? R.layout.tasks_fragment_item : R.layout.tasks_fragment_item_no_timer,
+                parent,
+                false);
         final ViewHolder holder = new ViewHolder(view);
 
-        if (mTimerEnabled) {
+        if (holder.start != null) {
             holder.start.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -62,6 +64,9 @@ public final class TasksRecyclerViewAdapter extends BaseAdapter<Card, ViewHolder
         }
 
         holder.timeSpent.setText(timeSpent);
-        holder.start.setVisibility(mTimerEnabled ? View.VISIBLE : View.INVISIBLE);
+
+        if (holder.start != null) {
+            holder.start.setVisibility(mTimerEnabled ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 }
