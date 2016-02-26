@@ -28,7 +28,7 @@ import com.bastienleonard.tomate.ui.timer.TimerActivity;
 
 import java.util.List;
 
-public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.OnTimerClickedListener, SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<List<Card>> {
+abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.OnTimerClickedListener, SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<List<Card>> {
     protected static final String ARG_LIST_ID = "listId";
     private static final int CARDS_LOADER_ID = 1;
     private static final int MOVE_CARD_LOADER_ID = 2;
@@ -58,8 +58,14 @@ public class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(CARDS_LOADER_ID, null, this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mExclusiveLayout.showFirst();
+        onRefresh();
     }
 
     @Override
