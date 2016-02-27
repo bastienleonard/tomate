@@ -23,8 +23,7 @@ public final class AddCommentLoader extends BasicLoader<Boolean> {
     @Override
     public Boolean loadInBackground() {
         try {
-            Webservices.addComment(getContext(),
-                    TrelloCredentials.getAppKey(),
+            Webservices.addComment(TrelloCredentials.getAppKey(),
                     TrelloCredentials.getPersistedToken(getContext()),
                     mCardId,
                     mText);

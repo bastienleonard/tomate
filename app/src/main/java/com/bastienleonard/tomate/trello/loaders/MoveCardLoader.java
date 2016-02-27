@@ -23,8 +23,7 @@ public final class MoveCardLoader extends BasicLoader<Boolean> {
     @Override
     public Boolean loadInBackground() {
         try {
-            Webservices.moveCard(getContext(),
-                    TrelloCredentials.getAppKey(),
+            Webservices.moveCard(TrelloCredentials.getAppKey(),
                     TrelloCredentials.getPersistedToken(getContext()),
                     mCardId,
                     mListId);

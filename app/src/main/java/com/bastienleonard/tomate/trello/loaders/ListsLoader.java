@@ -23,8 +23,7 @@ public final class ListsLoader extends BasicLoader<List<TrelloList>> {
     @Override
     public List<TrelloList> loadInBackground() {
         try {
-            return Webservices.getBoardsLists(getContext(),
-                    TrelloCredentials.getAppKey(),
+            return Webservices.getBoardsLists(TrelloCredentials.getAppKey(),
                     TrelloCredentials.getPersistedToken(getContext()),
                     mBoardId);
         } catch (IOException e) {

@@ -1,6 +1,5 @@
 package com.bastienleonard.tomate.trello;
 
-import android.content.Context;
 import android.net.Uri;
 import android.util.Pair;
 
@@ -15,14 +14,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: remove context parameters
 public final class Webservices {
     private static final String TAG = "Webservices";
 
     private Webservices() {
     }
 
-    public static List<Board> getUsersBoards(Context context, String appKey, String token)
+    public static List<Board> getUsersBoards(String appKey, String token)
             throws IOException {
         String url = getBaseUrlBuilder(appKey, token)
                 .path("1/members/me/boards")
@@ -31,7 +29,7 @@ public final class Webservices {
         return new BoardsParser().parse(Http.get(url));
     }
 
-    public static List<TrelloList> getBoardsLists(Context context, String appKey, String token, String boardId)
+    public static List<TrelloList> getBoardsLists(String appKey, String token, String boardId)
             throws IOException {
         String url = getBaseUrlBuilder(appKey, token)
                 .path("1/boards/" + boardId + "/lists")
@@ -40,7 +38,7 @@ public final class Webservices {
         return new ListsParser().parse(Http.get(url));
     }
 
-    public static List<Card> getListsCards(Context context, String appKey, String token, String listId)
+    public static List<Card> getListsCards(String appKey, String token, String listId)
             throws IOException {
         String url = getBaseUrlBuilder(appKey, token)
                 .path("1/lists/" + listId + "/cards")
@@ -49,7 +47,7 @@ public final class Webservices {
         return new CardsParser().parse(Http.get(url));
     }
 
-    public static void moveCard(Context context, String appKey, String token, String cardId, String listId)
+    public static void moveCard(String appKey, String token, String cardId, String listId)
             throws IOException {
         String url = getBaseUrlBuilder(appKey, token)
                 .path("1/cards/" + cardId + "/idList")
@@ -60,7 +58,7 @@ public final class Webservices {
         Http.put(url, args).close();
     }
 
-    public static void addComment(Context context, String appKey, String token, String cardId, String text)
+    public static void addComment(String appKey, String token, String cardId, String text)
             throws IOException {
         String url = getBaseUrlBuilder(appKey, token)
                 .path("1/cards/" + cardId + "/actions/comments")

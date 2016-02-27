@@ -21,7 +21,7 @@ public final class BoardsLoader extends BasicLoader<List<Board>> {
     @Override
     public List<Board> loadInBackground() {
         try {
-            return Webservices.getUsersBoards(getContext(), TrelloCredentials.getAppKey(), TrelloCredentials.getPersistedToken(getContext()));
+            return Webservices.getUsersBoards(TrelloCredentials.getAppKey(), TrelloCredentials.getPersistedToken(getContext()));
         } catch (IOException e) {
             LogUtils.e(TAG, e);
             return null;
