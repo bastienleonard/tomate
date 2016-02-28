@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BoardsParser extends JsonParser<List<Board>, JSONArray> {
+public final class BoardsArrayParser extends JsonArrayParser<List<Board>> {
     @Override
     List<Board> parseJson(JSONArray boardsJson) throws JSONException, ParseException {
         List<Board> boards = new ArrayList<>();

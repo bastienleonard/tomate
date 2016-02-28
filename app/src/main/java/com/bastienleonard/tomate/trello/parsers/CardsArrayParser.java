@@ -1,6 +1,6 @@
 package com.bastienleonard.tomate.trello.parsers;
 
-import com.bastienleonard.tomate.trello.models.TrelloList;
+import com.bastienleonard.tomate.trello.models.Card;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,14 +10,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListsParser extends JsonParser<List<TrelloList>, JSONArray> {
+public class CardsArrayParser extends JsonArrayParser<List<Card>> {
     @Override
-    List<TrelloList> parseJson(JSONArray root) throws JSONException, ParseException {
-        List<TrelloList> lists = new ArrayList<>();
+    List<Card> parseJson(JSONArray root) throws JSONException, ParseException {
+        List<Card> lists = new ArrayList<>();
 
         for (int i = 0; i < root.length(); ++i) {
             JSONObject listJson = root.getJSONObject(i);
-            lists.add(new TrelloList(listJson.getString("id"),
+            lists.add(new Card(listJson.getString("id"),
                     listJson.getString("name")));
         }
 

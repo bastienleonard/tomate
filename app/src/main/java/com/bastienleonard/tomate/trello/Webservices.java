@@ -6,9 +6,9 @@ import android.util.Pair;
 import com.bastienleonard.tomate.trello.models.Board;
 import com.bastienleonard.tomate.trello.models.Card;
 import com.bastienleonard.tomate.trello.models.TrelloList;
-import com.bastienleonard.tomate.trello.parsers.BoardsParser;
-import com.bastienleonard.tomate.trello.parsers.CardsParser;
-import com.bastienleonard.tomate.trello.parsers.ListsParser;
+import com.bastienleonard.tomate.trello.parsers.BoardsArrayParser;
+import com.bastienleonard.tomate.trello.parsers.CardsArrayParser;
+import com.bastienleonard.tomate.trello.parsers.ListsArrayParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public final class Webservices {
                 .path("1/members/me/boards")
                 .build()
                 .toString();
-        return new BoardsParser().parse(Http.get(url));
+        return new BoardsArrayParser().parse(Http.get(url));
     }
 
     public static List<TrelloList> getBoardsLists(String appKey, String token, String boardId)
@@ -35,7 +35,7 @@ public final class Webservices {
                 .path("1/boards/" + boardId + "/lists")
                 .build()
                 .toString();
-        return new ListsParser().parse(Http.get(url));
+        return new ListsArrayParser().parse(Http.get(url));
     }
 
     public static List<Card> getListsCards(String appKey, String token, String listId)
@@ -44,7 +44,7 @@ public final class Webservices {
                 .path("1/lists/" + listId + "/cards")
                 .build()
                 .toString();
-        return new CardsParser().parse(Http.get(url));
+        return new CardsArrayParser().parse(Http.get(url));
     }
 
     public static void moveCard(String appKey, String token, String cardId, String listId)
