@@ -40,7 +40,11 @@ public final class TimesUpDialogFragment extends DialogFragment implements View.
     @Override
     public void onDismiss(DialogInterface dialog) {
         if (mMoveToToDo) {
-            moveToToDo();
+            // When the screen is rotated, this method is called with getActivity() == null,
+            // which otherwise causes a crash
+            if (getActivity() != null) {
+                moveToToDo();
+            }
         }
 
         super.onDismiss(dialog);
