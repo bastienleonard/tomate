@@ -24,19 +24,14 @@
         </activity>
         <activity android:name=".trello.TrelloLoginActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/login_label"/>
         <activity android:name=".ui.trellosetup.SetupActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/setup_label" />
         <activity android:name=".ui.tasks.TasksActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/tasks_label" />
         <activity android:name=".ui.timer.TimerActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/timer_label" />
         <activity android:name=".ui.breaktimer.BreakTimerActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/break_label" />
 
         <receiver android:name=".ui.timer.AlarmReceiver"
