@@ -34,7 +34,7 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
     private static final int MOVE_CARD_LOADER_ID = 2;
 
     private BaseAdapter<Card, ? extends RecyclerView.ViewHolder> mAdapter;
-    private CoordinatorLayout mCoordinator;
+    private View mRoot;
     private ExclusiveLayout mExclusiveLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -45,8 +45,8 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tasks_fragment, container, false);
-        mCoordinator = (CoordinatorLayout) view.findViewById(R.id.coordinator);
         mExclusiveLayout = (ExclusiveLayout) view.findViewById(R.id.exclusive_layout);
+        mRoot = mExclusiveLayout;
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         RecyclerView list = (RecyclerView) view.findViewById(R.id.list);
         mAdapter = createAdapter();
@@ -93,7 +93,7 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
         getLoaderManager().destroyLoader(CARDS_LOADER_ID);
 
         if (cards == null) {
-            Snackbar.make(mCoordinator, R.string.error_loading_cards, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(mRoot, R.string.error_loading_cards, Snackbar.LENGTH_LONG).show();
         } else if (cards.size() == 0) {
             mExclusiveLayout.showNext();
         } else {
@@ -126,7 +126,7 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
             getLoaderManager().destroyLoader(MOVE_CARD_LOADER_ID);
 
             if (!data) {
-                Snackbar.make(mCoordinator, R.string.error_card_move, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRoot, R.string.error_card_move, Snackbar.LENGTH_LONG).show();
             }
         }
 
