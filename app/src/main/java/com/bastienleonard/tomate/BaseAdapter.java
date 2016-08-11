@@ -8,13 +8,6 @@ import java.util.List;
 public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     protected List<T> mItems = new ArrayList<>();
 
-    protected abstract void onBindItem(VH holder, T item, int position);
-
-    @Override
-    public void onBindViewHolder(VH holder, int position) {
-        onBindItem(holder, mItems.get(position), position);
-    }
-
     @Override
     public int getItemCount() {
         return mItems.size();

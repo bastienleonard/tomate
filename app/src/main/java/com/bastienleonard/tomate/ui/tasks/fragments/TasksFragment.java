@@ -28,7 +28,11 @@ import com.bastienleonard.tomate.ui.timer.TimerActivity;
 
 import java.util.List;
 
-abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapter.OnTimerClickedListener, SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<List<Card>> {
+abstract class TasksFragment
+        extends Fragment
+        implements TasksRecyclerViewAdapter.TasksRecyclerViewAdapterListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        LoaderManager.LoaderCallbacks<List<Card>> {
     protected static final String ARG_LIST_ID = "listId";
     private static final int CARDS_LOADER_ID = 1;
     private static final int MOVE_CARD_LOADER_ID = 2;
@@ -37,6 +41,7 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
     private View mRoot;
     private ExclusiveLayout mExclusiveLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String mLastCardId; // FIXME: save
 
     protected BaseAdapter<Card, ? extends RecyclerView.ViewHolder> createAdapter() {
         return new TasksRecyclerViewAdapter(this);
@@ -69,12 +74,21 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
     }
 
     @Override
-    public void onTimerClicked(Card card){
+    public void onTimerClicked(Card card) {
         Task task = TomateApp.get().getTaskCache().get(card.getId());
         getLoaderManager().initLoader(MOVE_CARD_LOADER_ID, null, new MoveCardLoaderCallbacks(card.getId(), Facade.getDoingListId(getContext())));
         Intent intent = new Intent(getContext(), TimerActivity.class);
         TimerActivity.fillIntent(intent, card.getId(), task);
         startActivity(intent);
+    }
+
+    @Override
+    public void onNextPageNeeded() {
+        android.util.Log.e("DEBUG", "onNextPageNeeded()");
+
+        if (mLastCardId != null) {
+            getLoaderManager().initLoader(CARDS_LOADER_ID, null, TasksFragment.this);
+        }
     }
 
     @Override
@@ -84,7 +98,7 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
 
     @Override
     public Loader<List<Card>> onCreateLoader(int i, Bundle bundle) {
-        return new CardsLoader(getContext(), getArguments().getString(ARG_LIST_ID));
+        return new CardsLoader(getContext(), getArguments().getString(ARG_LIST_ID), 2, mLastCardId);
     }
 
     @Override
@@ -93,10 +107,13 @@ abstract class TasksFragment extends Fragment implements TasksRecyclerViewAdapte
         getLoaderManager().destroyLoader(CARDS_LOADER_ID);
 
         if (cards == null) {
+            mLastCardId = null;
             Snackbar.make(mRoot, R.string.error_loading_cards, Snackbar.LENGTH_LONG).show();
         } else if (cards.size() == 0) {
+            mLastCardId = null;
             mExclusiveLayout.showNext();
         } else {
+            mLastCardId = cards.get(cards.size() - 1).getId();
             mExclusiveLayout.showNext();
             mAdapter.setItems(cards);
             mAdapter.notifyDataSetChanged();

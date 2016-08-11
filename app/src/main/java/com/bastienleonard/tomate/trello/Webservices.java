@@ -38,10 +38,12 @@ public final class Webservices {
         return new ListsArrayParser().parse(Http.get(url));
     }
 
-    public static List<Card> getListsCards(String appKey, String token, String listId)
+    public static List<Card> getListsCards(String appKey, String token, String listId, int limit, String lastCardId)
             throws IOException {
         String url = getBaseUrlBuilder(appKey, token)
                 .path("1/lists/" + listId + "/cards")
+                .appendQueryParameter("limit", String.valueOf(limit))
+                .appendQueryParameter("since", lastCardId)
                 .build()
                 .toString();
         return new CardsArrayParser().parse(Http.get(url));

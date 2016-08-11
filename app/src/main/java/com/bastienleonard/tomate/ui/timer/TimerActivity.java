@@ -243,8 +243,7 @@ public final class TimerActivity extends BaseActivity implements View.OnClickLis
             seconds = 0L;
         }
 
-        mTime.setText(String.format(Locale.US, "%d:%02d",
-                minutes, seconds));
+        mTime.setText(String.format(Locale.US, "%d:%02d", minutes, seconds));
     }
 
     private void updateButtons() {

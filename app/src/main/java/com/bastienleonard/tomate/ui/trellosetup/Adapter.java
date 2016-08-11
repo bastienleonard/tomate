@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.bastienleonard.tomate.BaseAdapter;
 import com.bastienleonard.tomate.R;
+import com.bastienleonard.tomate.trello.models.TrelloList;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,7 +43,8 @@ public final class Adapter<T extends Displayable> extends BaseAdapter<T, ViewHol
     }
 
     @Override
-    protected void onBindItem(ViewHolder holder, T list, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Displayable list = mItems.get(position);
         holder.text.setText(list.displayText());
     }
 

@@ -14,10 +14,14 @@ import java.util.List;
 public final class CardsLoader extends BasicLoader<List<Card>> {
     private static final String TAG = "CardsLoader";
     private final String mListId;
+    private final int mLimit;
+    private final String mLastCardId;
 
-    public CardsLoader(Context context, String listId) {
+    public CardsLoader(Context context, String listId, int limit, String lastCardId) {
         super(context);
         mListId = listId;
+        mLimit = limit;
+        mLastCardId = lastCardId;
     }
 
     @Override
@@ -25,7 +29,9 @@ public final class CardsLoader extends BasicLoader<List<Card>> {
         try {
             return Webservices.getListsCards(TrelloCredentials.getAppKey(),
                     TrelloCredentials.getPersistedToken(getContext()),
-                    mListId);
+                    mListId,
+                    mLimit,
+                    mLastCardId);
         } catch (IOException e) {
             LogUtils.e(TAG, e);
             return null;
